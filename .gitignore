@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /_Images/d10b67ce-5a47-4f04-9491-7b14bd34c22a
+/ImageHubAPI.db
+/ImageHubAPI.db-shm
+/ImageHubAPI.db-wal
