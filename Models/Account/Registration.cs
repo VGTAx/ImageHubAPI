@@ -24,7 +24,8 @@ namespace ImageHubAPI.Models.Account
     /// Password
     /// </summary>
     /// <example>Password!1</example>
-    [DataType(DataType.Password)]    
+    [DataType(DataType.Password)]
+    [Required]
     public string? Password { get; set; }
     /// <summary>
     /// Confirm password
@@ -32,6 +33,7 @@ namespace ImageHubAPI.Models.Account
     /// <example>Password!1</example>
     [DataType(DataType.Password)]
     [Compare(nameof(Password))]
+    [Required]
     public string? ConfirmPassword { get; set; }
   }
 }
