@@ -74,5 +74,6 @@ The project is an ASP.NET Core Web API for managing users and their roles.
    <li>Go to the project directory.</li>
    <li>Make sure you have the .NET SDK installed. If not, install it from the official .NET site: https://dotnet.microsoft.com/download/dotnet</li>
    <li>Restore the project dependencies using the command: <b><i>dotnet restore</i></b></li>
+   <li>Migrate to create the database and fill it with initial data: <b><i>dotnet ef database update</i></b></li>
    <li>Run the API using the command: <b><i>dotnet run</i></b></li>
 </ol>
