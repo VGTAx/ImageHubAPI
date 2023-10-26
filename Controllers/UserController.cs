@@ -297,7 +297,6 @@ namespace ImageHubAPI.Controllers
     /// <response code="200">Images received</response>
     /// <response code="400">The request contains invalid data or invalid parameters</response>
     /// <response code="401">User is not authorized</response>
-    /// <response code="403">There are no permissions to do the operation</response>
     /// <response code="404">User not exist</response>
     /// <response code="500">Internal server error</response>
     /// <returns>Returns an HTTP status code indicating the result of the <see cref="GetUser"/> method</returns>
@@ -316,11 +315,6 @@ namespace ImageHubAPI.Controllers
         if (user == null)
         {
           return NotFound($"User with Email: {email} not exist");
-        }
-
-        if (!IsUserIdValid(user.Id))
-        {
-          return StatusCode(403, "There are no permissions to do the operation");
         }
 
         return Ok(new { UserId = user.Id, Username = user.Name, user.Email, Message = "User received" });
