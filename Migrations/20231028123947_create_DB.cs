@@ -87,9 +87,9 @@ namespace ImageHubAPI.Migrations
                 columns: table => new
                 {
                     FriendshipId = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    UserSenderId = table.Column<string>(type: "TEXT", nullable: true),
                     FriendId = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId1 = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,8 +105,8 @@ namespace ImageHubAPI.Migrations
                         principalTable: "User",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Friendships_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Friendships_User_UserSenderId",
+                        column: x => x.UserSenderId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
@@ -135,8 +135,8 @@ namespace ImageHubAPI.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "23ad2a4f-c1f0-4abc-94c0-52854af2039e", 0, "20b2d932-129d-4f31-b0bd-a0e88244145a", "username_2@example.com", false, true, null, "Username_2", "USERNAME_2@EXAMPLE.COM", "USERNAME_2@EXAMPLE.COM", "AQAAAAIAAYagAAAAECGNeswdJvAFFLya98Hp2gMJUtjaLRH2qaoxFZ80f3Tr8HTvjIjH0x4djwMNZUHhjg==", null, false, "aab28f0e-b024-4ec9-857b-33f9ee5246bf", false, "username_2@example.com" },
-                    { "55d8220f-2967-4342-8f6c-e6294a3e52c2", 0, "c7104aba-53a1-4ceb-a2b6-8114a286f834", "username_1@example.com", false, true, null, "Username_1", "USERNAME_1@EXAMPLE.COM", "USERNAME_1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEOqmVlPmLR/sG37g5AZB9at/nO0uSfzikTQUDv3VlJk7w3lffHKsI2wO589vFPUNkw==", null, false, "b32da478-203d-433c-8023-13c900ff91ca", false, "username_1@example.com" }
+                    { "23ad2a4f-c1f0-4abc-94c0-52854af2039e", 0, "9f74027d-eb4e-4a97-afd8-b94ff243733c", "username_2@example.com", false, true, null, "Username_2", "USERNAME_2@EXAMPLE.COM", "USERNAME_2@EXAMPLE.COM", "AQAAAAIAAYagAAAAENvwpY06Tnq1EplpjJgC1TYFuCSOJRV9Cq5905IrbPqIjxij+ClCoaF5MnCP8sHBhg==", null, false, "1eb7c101-8f54-41e1-b65a-df7b5b3ded31", false, "username_2@example.com" },
+                    { "55d8220f-2967-4342-8f6c-e6294a3e52c2", 0, "c7281e59-96c7-4013-835d-c66cf7251e09", "username_1@example.com", false, true, null, "Username_1", "USERNAME_1@EXAMPLE.COM", "USERNAME_1@EXAMPLE.COM", "AQAAAAIAAYagAAAAEPQHRHIiWIlB6+j/YgzT3pY28k8TDDngVyqwVK8ra0ZojD51zwOMwpwA34yZk7xfng==", null, false, "4e902d61-f69e-48ba-b4c4-0f99c0cfd308", false, "username_1@example.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -144,10 +144,10 @@ namespace ImageHubAPI.Migrations
                 columns: new[] { "ImageId", "Path", "Title", "UserId" },
                 values: new object[,]
                 {
-                    { "22074d3a-c05a-4016-8e55-f5bc4d695e98", "/55d8220f-2967-4342-8f6c-e6294a3e52c2/PngItem_6631012.png", "github.png", "55d8220f-2967-4342-8f6c-e6294a3e52c2" },
-                    { "33742155-859d-4adf-b52c-524b439ca685", "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/logo.jpg", "github.png", "23ad2a4f-c1f0-4abc-94c0-52854af2039e" },
-                    { "72282ddc-eeb1-4f8d-97ff-578c2e6eb698", "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/github.png", "github.png", "23ad2a4f-c1f0-4abc-94c0-52854af2039e" },
-                    { "85a2c8b8-abe4-4bbf-a683-47d7e557bffd", "/55d8220f-2967-4342-8f6c-e6294a3e52c2/man-search-for-hiring-job-online-from-laptop_1150-52728.jpg", "github.png", "55d8220f-2967-4342-8f6c-e6294a3e52c2" }
+                    { "04d7da38-62e4-4f92-a016-3a8cac8ecea8", "/55d8220f-2967-4342-8f6c-e6294a3e52c2/PngItem_6631012.png", "PngItem_6631012.png", "55d8220f-2967-4342-8f6c-e6294a3e52c2" },
+                    { "38560b03-d8c8-4134-865e-87d4e1ea8eb1", "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/github.png", "github.png", "23ad2a4f-c1f0-4abc-94c0-52854af2039e" },
+                    { "4449e689-70c1-4917-9457-78b0b3e4aa38", "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/logo.jpg", "logo.jpg", "23ad2a4f-c1f0-4abc-94c0-52854af2039e" },
+                    { "c753ccde-eed7-4fa7-8338-55708b36a191", "/55d8220f-2967-4342-8f6c-e6294a3e52c2/man-search-for-hiring-job-online-from-laptop_1150-52728.jpg", "man-search-for-hiring-job-online-from-laptop_1150-52728.jpg", "55d8220f-2967-4342-8f6c-e6294a3e52c2" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -161,9 +161,9 @@ namespace ImageHubAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friendships_UserId1",
+                name: "IX_Friendships_UserSenderId",
                 table: "Friendships",
-                column: "UserId1");
+                column: "UserSenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Images_Path",

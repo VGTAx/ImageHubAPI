@@ -14,20 +14,24 @@ namespace ImageHubAPI.Models
         [Key]
         [Column(Order = 1)]
         public string? FriendshipId { get; set; }
+
         /// <summary>
-        /// First user id
+        /// User id
         /// </summary>
         [Column(Order = 2)]
-        public string? UserId { get; set; }
+        public string? UserSenderId { get; set; }
+
         /// <summary>
-        /// Second user id
+        /// Friend id
         /// </summary>
         [Column(Order = 3)]
         public string? FriendId { get; set; }
+
         /// <summary>
         /// Navigation property
         /// </summary>
         public User? FirstUser { get; set; }
+
         /// <summary>
         /// Navigation property
         /// </summary>

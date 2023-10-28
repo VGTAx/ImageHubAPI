@@ -28,11 +28,11 @@ namespace ImageHubAPI.Migrations
                         .HasColumnOrder(3);
 
                     b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserSenderId")
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("FriendshipId");
 
@@ -40,7 +40,7 @@ namespace ImageHubAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserSenderId");
 
                     b.ToTable("Friendships");
                 });
@@ -71,30 +71,30 @@ namespace ImageHubAPI.Migrations
                     b.HasData(
                         new
                         {
-                            ImageId = "72282ddc-eeb1-4f8d-97ff-578c2e6eb698",
+                            ImageId = "38560b03-d8c8-4134-865e-87d4e1ea8eb1",
                             Path = "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/github.png",
                             Title = "github.png",
                             UserId = "23ad2a4f-c1f0-4abc-94c0-52854af2039e"
                         },
                         new
                         {
-                            ImageId = "33742155-859d-4adf-b52c-524b439ca685",
+                            ImageId = "4449e689-70c1-4917-9457-78b0b3e4aa38",
                             Path = "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/logo.jpg",
-                            Title = "github.png",
+                            Title = "logo.jpg",
                             UserId = "23ad2a4f-c1f0-4abc-94c0-52854af2039e"
                         },
                         new
                         {
-                            ImageId = "22074d3a-c05a-4016-8e55-f5bc4d695e98",
+                            ImageId = "04d7da38-62e4-4f92-a016-3a8cac8ecea8",
                             Path = "/55d8220f-2967-4342-8f6c-e6294a3e52c2/PngItem_6631012.png",
-                            Title = "github.png",
+                            Title = "PngItem_6631012.png",
                             UserId = "55d8220f-2967-4342-8f6c-e6294a3e52c2"
                         },
                         new
                         {
-                            ImageId = "85a2c8b8-abe4-4bbf-a683-47d7e557bffd",
+                            ImageId = "c753ccde-eed7-4fa7-8338-55708b36a191",
                             Path = "/55d8220f-2967-4342-8f6c-e6294a3e52c2/man-search-for-hiring-job-online-from-laptop_1150-52728.jpg",
-                            Title = "github.png",
+                            Title = "man-search-for-hiring-job-online-from-laptop_1150-52728.jpg",
                             UserId = "55d8220f-2967-4342-8f6c-e6294a3e52c2"
                         });
                 });
@@ -159,16 +159,16 @@ namespace ImageHubAPI.Migrations
                         {
                             Id = "55d8220f-2967-4342-8f6c-e6294a3e52c2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c7104aba-53a1-4ceb-a2b6-8114a286f834",
+                            ConcurrencyStamp = "c7281e59-96c7-4013-835d-c66cf7251e09",
                             Email = "username_1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             Name = "Username_1",
                             NormalizedEmail = "USERNAME_1@EXAMPLE.COM",
                             NormalizedUserName = "USERNAME_1@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOqmVlPmLR/sG37g5AZB9at/nO0uSfzikTQUDv3VlJk7w3lffHKsI2wO589vFPUNkw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPQHRHIiWIlB6+j/YgzT3pY28k8TDDngVyqwVK8ra0ZojD51zwOMwpwA34yZk7xfng==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b32da478-203d-433c-8023-13c900ff91ca",
+                            SecurityStamp = "4e902d61-f69e-48ba-b4c4-0f99c0cfd308",
                             TwoFactorEnabled = false,
                             UserName = "username_1@example.com"
                         },
@@ -176,16 +176,16 @@ namespace ImageHubAPI.Migrations
                         {
                             Id = "23ad2a4f-c1f0-4abc-94c0-52854af2039e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "20b2d932-129d-4f31-b0bd-a0e88244145a",
+                            ConcurrencyStamp = "9f74027d-eb4e-4a97-afd8-b94ff243733c",
                             Email = "username_2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = true,
                             Name = "Username_2",
                             NormalizedEmail = "USERNAME_2@EXAMPLE.COM",
                             NormalizedUserName = "USERNAME_2@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAECGNeswdJvAFFLya98Hp2gMJUtjaLRH2qaoxFZ80f3Tr8HTvjIjH0x4djwMNZUHhjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENvwpY06Tnq1EplpjJgC1TYFuCSOJRV9Cq5905IrbPqIjxij+ClCoaF5MnCP8sHBhg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aab28f0e-b024-4ec9-857b-33f9ee5246bf",
+                            SecurityStamp = "1eb7c101-8f54-41e1-b65a-df7b5b3ded31",
                             TwoFactorEnabled = false,
                             UserName = "username_2@example.com"
                         });
@@ -255,13 +255,13 @@ namespace ImageHubAPI.Migrations
                         .WithMany()
                         .HasForeignKey("FriendId");
 
-                    b.HasOne("ImageHubAPI.Models.User", "FirstUser")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.HasOne("ImageHubAPI.Models.User", null)
                         .WithMany("Friendships")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("ImageHubAPI.Models.User", "FirstUser")
+                        .WithMany()
+                        .HasForeignKey("UserSenderId");
 
                     b.Navigation("FirstUser");
 

@@ -35,9 +35,14 @@ namespace ImageHubAPI.Controllers
     /// <summary>
     /// Add friend
     /// </summary>
-    /// <param name="addFriendDto" example='{"UserId":"23ad2a4f-c1f0-4abc-94c0-52854af2039e", "FriendId":"55d8220f-2967-4342-8f6c-e6294a3e52c2"}'>DTO for add friend</param>
+    /// <param name="addFriendDto" example='{"UserId":"55d8220f-2967-4342-8f6c-e6294a3e52c2", "FriendId":"23ad2a4f-c1f0-4abc-94c0-52854af2039e"}'>DTO for add friend</param>
     /// <response code="200">Friend added</response>
-    /// <response code="400">The request contains invalid data or invalid parameters</response>
+    /// <response code="400">
+    ///   <ul>
+    ///     <li>The request contains invalid data or invalid parameters</li>
+    ///     <li>Friend was alreday added</li>
+    ///   </ul>
+    /// </response>
     /// <response code="401">User is not authorized</response>
     /// <response code="403">There are no permissions to do the operation</response>
     /// <response code="404">User not exist</response>
@@ -68,11 +73,19 @@ namespace ImageHubAPI.Controllers
           return StatusCode(403, "There are no permissions to do the operation");
         }
 
+        var IsFriendshipExist = await _context.Friendships.AnyAsync(fr => fr.UserSenderId == addFriendDto.UserId 
+              && fr.FriendId == addFriendDto.FriendId);
+
+        if(IsFriendshipExist) 
+        {
+          return BadRequest($"Friend with ID: {addFriendDto.FriendId} was already added");
+        }
+
         var requester = await _context.Users.FirstOrDefaultAsync(u => u.Id == addFriendDto.UserId);
 
         var friendship = new Friendship
         {
-          UserId = addFriendDto.UserId,
+          UserSenderId = addFriendDto.UserId,
           FriendId = addFriendDto.FriendId,
           FriendshipId = Guid.NewGuid().ToString()
         };
@@ -218,7 +231,7 @@ namespace ImageHubAPI.Controllers
 
         var images = _context.Images
           .Where(i => i.UserId == userId)
-          .Select(i => i.Path);
+          .Select(i => _configuration.GetSection("PathImgHub").Value + i.Path);
 
         if (!images.Any())
         {
@@ -266,7 +279,7 @@ namespace ImageHubAPI.Controllers
 
         var userId = User.FindFirst("UserID")!.Value;
 
-        var availableFriendImg = await _context.Friendships.FirstOrDefaultAsync(fr => fr.FriendId == friendId && fr.UserId == userId);
+        var availableFriendImg = await _context.Friendships.FirstOrDefaultAsync(fr => fr.FriendId == friendId);
 
         if (availableFriendImg == null || !IsUserIdValid(userId))
         {
@@ -275,7 +288,7 @@ namespace ImageHubAPI.Controllers
 
         var images = _context.Images
           .Where(i => i.UserId == friendId)
-          .Select(i => i.Path);
+          .Select(i => _configuration.GetSection("PathImgHub").Value + i.Path);
 
         if (!images.Any())
         {
