@@ -34,8 +34,4 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Tests\ImageHubAPI.UnitTests.csproj" />
-  </ItemGroup>
-
 </Project>
