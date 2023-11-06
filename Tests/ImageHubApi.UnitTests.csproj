@@ -31,9 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ImageHubAPI">
-      
-      <HintPath>..\..\ImageHubAPI\blob\origin\ImageHubAPI.csproj</HintPath>
+    <Reference Include="ImageHubAPI">      
+      <HintPath>..\..\ImageHubAPI\ImageHubAPI.csproj</HintPath>
     </Reference>
   </ItemGroup>
 
