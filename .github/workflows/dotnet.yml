@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore /ImageHubAPI/ImageHubAPI.sln
+      run: dotnet restore ./ImageHubAPI.sln
     - name: Build
-      run: dotnet build /ImageHubAPI/ImageHubAPI.sln --no-restore
+      run: dotnet build ./ImageHubAPI.sln --no-restore
     - name: Test
       run: dotnet test https://github.com/VGTAx/ImageHubAPI.UnitTests/ImageHubAPI.UnitTests.csproj --no-build --verbosity normal
