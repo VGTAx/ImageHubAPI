@@ -15,7 +15,7 @@ using Moq.EntityFrameworkCore;
 namespace ImageHubAPI.UnitTests
 {
   [TestFixture]
-  public class AccountControllerTest
+  public class AccountControllerTests
   {
     private AccountController _controller;
     private Mock<IImageHubContext> _contextMock;
