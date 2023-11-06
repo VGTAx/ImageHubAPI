@@ -32,7 +32,8 @@
 
   <ItemGroup>
     <Reference Include="ImageHubAPI">
-      <HintPath>..\..\Project\obj\Debug\net7.0\ImageHubAPI.exe</HintPath>
+      
+      <HintPath>..\..\ImageHubAPI\blob\origin\ImageHubAPI.csproj</HintPath>
     </Reference>
   </ItemGroup>
 
