@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build ./ImageHubAPI.sln --no-restore
     - name: Test
-      run: dotnet test https://github.com/VGTAx/ImageHubAPI.UnitTests/ImageHubAPI.UnitTests.csproj --no-build --verbosity normal
+      run: dotnet test github.com/VGTAx/ImageHubAPI.UnitTests/ImageHubAPI.UnitTests.csproj --no-build --verbosity normal
