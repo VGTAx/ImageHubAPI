@@ -16,7 +16,7 @@ namespace ImageHubAPI.Controllers
   [Route("api/Account")]
   public class AccountController : ControllerBase
   {
-    private readonly ImageHubContext _context;
+    private readonly IImageHubContext _context;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IUserStore<User> _userStore;
@@ -31,7 +31,7 @@ namespace ImageHubAPI.Controllers
     /// <param name="userStore">User storage</param>
     /// <param name="jwtGenerator">JWT token generator</param>
     public AccountController(
-      ImageHubContext context,
+      IImageHubContext context,
       UserManager<User> userManager,
       SignInManager<User> signInManager,
       IUserStore<User> userStore,

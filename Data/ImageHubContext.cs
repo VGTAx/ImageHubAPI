@@ -9,9 +9,10 @@ namespace ImageHubAPI.Data
     /// <summary>
     /// Database context for the ImageHubAPI
     /// </summary>
-    public class ImageHubContext : IdentityUserContext<User>
+    public class ImageHubContext : IdentityUserContext<User>, IImageHubContext
   {
     public ImageHubContext(DbContextOptions<ImageHubContext> options) : base(options) { }
+    public ImageHubContext() { }
 
     public DbSet<Image> Images { get; set; }
     public DbSet<User> Users { get; set; }

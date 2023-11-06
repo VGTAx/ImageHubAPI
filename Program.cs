@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder();
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<ImageHubContext>(options =>
+builder.Services.AddDbContext<IImageHubContext, ImageHubContext>(options =>
   options.UseSqlite(builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
