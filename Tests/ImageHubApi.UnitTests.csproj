@@ -24,13 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <ProjectReference Include="..\Project\ImageHubAPI.csproj" />
-=======
     <Reference Include="ImageHubAPI">      
       <HintPath>..\..\ImageHubAPI\ImageHubAPI.csproj</HintPath>
     </Reference>
->>>>>>> 7a0d3177efa20e3207656e1127e0e3a2849bcbca
+
   </ItemGroup>
 
 </Project>
