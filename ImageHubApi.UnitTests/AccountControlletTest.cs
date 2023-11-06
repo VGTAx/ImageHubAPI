@@ -1,11 +1,13 @@
-using ImageHubAPI.Controllers;
+﻿using ImageHubAPI.Controllers;
 using ImageHubAPI.Data;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.EntityFrameworkCore;
@@ -13,7 +15,7 @@ using Moq.EntityFrameworkCore;
 namespace ImageHubAPI.UnitTests
 {
   [TestFixture]
-  public class AccountControllerTests
+  public class AccountControllerTest
   {
     private AccountController _controller;
     private Mock<IImageHubContext> _contextMock;
