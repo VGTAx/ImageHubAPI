@@ -29,6 +29,8 @@
     <ProjectReference Include="..\ImageHubAPI.csproj" />
   </ItemGroup>
 
+</Project>
+=======
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -55,10 +57,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Project\ImageHubAPI.csproj" />   
+    <ProjectReference Include="..\Project\ImageHubAPI.csproj" />
+    <Reference Include="ImageHubAPI">      
+      <HintPath>..\..\ImageHubAPI\ImageHubAPI.csproj</HintPath>
+    </Reference>
 
   </ItemGroup>
 
 </Project>
-
-
