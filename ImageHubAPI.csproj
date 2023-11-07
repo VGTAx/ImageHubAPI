@@ -16,6 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="UnitTestsProject\AccountControlletTest.cs" />
+    <Compile Remove="UnitTestsProject\GlobalUsings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="UnitTestsProject\AccountControlletTest.cs" />
+    <Content Include="UnitTestsProject\GlobalUsings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.13" />
