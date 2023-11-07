@@ -51,10 +51,4 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="ImageHubApi.UnitTests">
-      <HintPath>..\ImageHubApi.UnitTests\obj\Debug\net7.0\ImageHubApi.UnitTests.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
