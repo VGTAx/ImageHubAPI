@@ -1,8 +1,8 @@
 using ImageHubAPI.Controllers;
 using ImageHubAPI.Data;
 using ImageHubAPI.IService;
-using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
+using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,9 +12,9 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Moq.EntityFrameworkCore;
 
-namespace ImageHubApi.UnitTests
+namespace UnitTests
 {
-  public class AccControllerTests
+  public class AccountControllerTests
   {
     private AccountController _controller;
     private Mock<IImageHubContext> _contextMock;
@@ -170,6 +170,5 @@ namespace ImageHubApi.UnitTests
       //Assert
       Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
-
   }
 }
