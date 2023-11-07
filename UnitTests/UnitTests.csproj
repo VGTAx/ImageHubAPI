@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Project\ImageHubAPI.csproj" />
-    <Reference Include="ImageHubAPI">      
-      <HintPath>..\..\ImageHubAPI\ImageHubAPI.csproj</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Project\ImageHubAPI.csproj" />  
 
   </ItemGroup>
 
