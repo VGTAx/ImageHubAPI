@@ -365,3 +365,5 @@ FodyWeavers.xsd
 /ImageHubAPI.db
 /ImageHubAPI.db-shm
 /ImageHubAPI.db-wal
+/UnitTestsProject/bin/Debug/net7.0/nunit_random_seed.tmp
+/UnitTestsProject/obj/Debug/net7.0/UnitTestsProject.csproj.AssemblyReference.cache
