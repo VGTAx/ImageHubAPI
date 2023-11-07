@@ -6,11 +6,11 @@ namespace ImageHubAPI.IService
     /// Interface for generating JWT tokens.
     /// </summary>
     public interface IJwtGenerator
-  {
-    /// <summary>
-    /// Generates a JWT token based on the provided credentials.
-    /// </summary>
-    /// <returns>Generated JWT tokenS</returns>
-    string CreateToken(User user);
-  }
+    {
+        /// <summary>
+        /// Generates a JWT token based on the provided credentials.
+        /// </summary>
+        /// <returns>Generated JWT tokenS</returns>
+        string CreateToken(User user);
+    }
 }

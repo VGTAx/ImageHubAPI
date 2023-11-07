@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Properties\launchSettings.json" />
     <Content Include="UnitTestsProject\AccountControlletTest.cs" />
     <Content Include="UnitTestsProject\GlobalUsings.cs" />
   </ItemGroup>

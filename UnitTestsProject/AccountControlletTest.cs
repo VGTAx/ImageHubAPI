@@ -14,7 +14,7 @@ using Moq.EntityFrameworkCore;
 
 namespace ImageHubAPI.UnitTests
 {
-  [TestFixture]
+    [TestFixture]
   public class AccountControllerTest
   {
     private AccountController _controller;
