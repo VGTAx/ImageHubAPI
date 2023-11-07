@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubAPI", "ImageHubAPI.csproj", "{6020F1C7-C77E-4BCD-83CF-DE281D16EA0A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "..\Tests\UnitTests\UnitTests.csproj", "{358ED342-2178-4A95-9F1D-E5C9E5A1B8B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{6020F1C7-C77E-4BCD-83CF-DE281D16EA0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6020F1C7-C77E-4BCD-83CF-DE281D16EA0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6020F1C7-C77E-4BCD-83CF-DE281D16EA0A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Release|Any CPU.Build.0 = Release|Any CPU
+		{358ED342-2178-4A95-9F1D-E5C9E5A1B8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{358ED342-2178-4A95-9F1D-E5C9E5A1B8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{358ED342-2178-4A95-9F1D-E5C9E5A1B8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{358ED342-2178-4A95-9F1D-E5C9E5A1B8B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
