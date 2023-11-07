@@ -25,9 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageHubAPI.csproj" />
-    </Reference>
->>>>>>> 7a0d3177efa20e3207656e1127e0e3a2849bcbca
+    <ProjectReference Include="..\ImageHubAPI.csproj" />    
   </ItemGroup>
 
 </Project>

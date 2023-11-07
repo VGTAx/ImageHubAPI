@@ -6,10 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubAPI", "ImageHubAPI.csproj", "{6020F1C7-C77E-4BCD-83CF-DE281D16EA0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHubApi.UnitTests", "..\ImageHubApi.UnitTests\ImageHubApi.UnitTests.csproj", "{87269277-7AAE-4E73-BED6-E9565D6C2DDD}"
-=======
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubApi.UnitTests", "ImageHubApi.UnitTests.csproj", "{590517A4-ECA4-460F-9B14-1A266BC34785}"
->>>>>>> 7a0d3177efa20e3207656e1127e0e3a2849bcbca
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubApi.UnitTests", "..\ImageHubApi.UnitTests\ImageHubApi.UnitTests.csproj", "{87269277-7AAE-4E73-BED6-E9565D6C2DDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +23,10 @@ Global
 		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87269277-7AAE-4E73-BED6-E9565D6C2DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87269277-7AAE-4E73-BED6-E9565D6C2DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87269277-7AAE-4E73-BED6-E9565D6C2DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87269277-7AAE-4E73-BED6-E9565D6C2DDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
