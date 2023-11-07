@@ -7,9 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubAPI", "ImageHubAPI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{90CA57E2-020B-4FF5-88BA-3AB23D5D9765}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageHubApi.UnitTests", "..\ImageHubApi.UnitTests\ImageHubApi.UnitTests.csproj", "{87269277-7AAE-4E73-BED6-E9565D6C2DDD}"
-EndProject
-
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
