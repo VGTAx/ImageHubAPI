@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.EntityFrameworkCore;
+using NUnit.Framework;
 
 namespace ImageHubAPI.UnitTests
 {
