@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -15,7 +16,7 @@ using Moq.EntityFrameworkCore;
 namespace ImageHubAPI.UnitTests
 {
   [TestFixture]
-  public class AccountControllerTest
+  public class AccountControllerTests
   {
     private AccountController _controller;
     private Mock<IImageHubContext> _contextMock;
@@ -27,6 +28,13 @@ namespace ImageHubAPI.UnitTests
     [SetUp]
     public async Task Setup()
     {
+      var users = new List<User>
+      {
+        new User { Name = "User_1", Email = "username@example.com" },
+        new User { Name = "User_2", Email = "username1@example.com" },
+        new User { Name = "User_3", Email = "username2@example.com" }
+      }.AsQueryable();
+
       _contextMock = new Mock<IImageHubContext>();
       _contextMock.Setup(x => x.Users)
         .ReturnsDbSet(new List<User>
@@ -69,14 +77,14 @@ namespace ImageHubAPI.UnitTests
     [Test]
     public async Task Registration_EmailNotAvailable_ReturnBadRequest()
     {
-      //Arrange
+      //Arrange 
       var registration = new Registration
       {
         Email = "username@example.com",
         Name = "username",
         Password = "passworD1!",
         ConfirmPassword = "passworD2!"
-      };
+      };  
 
       //Act
       var result = await _controller.Registration(registration);

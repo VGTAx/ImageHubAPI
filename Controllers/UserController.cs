@@ -19,14 +19,14 @@ namespace ImageHubAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly ImageHubContext _context;
+        private readonly IImageHubContext _context;
 
         /// <summary>
         /// UserController constructor
         /// </summary>
         /// <param name="configuration">Application configuration</param>
         /// <param name="context">DB Context</param>
-        public UserController(IConfiguration configuration, ImageHubContext context)
+        public UserController(IConfiguration configuration, IImageHubContext context)
         {
             _configuration = configuration;
             _context = context;
@@ -90,8 +90,8 @@ namespace ImageHubAPI.Controllers
                     FriendshipId = Guid.NewGuid().ToString()
                 };
 
-                requester.AddFriendship(friendship);
-
+                requester!.AddFriendship(friendship);
+                
                 _context.Users.Update(requester);
                 await _context.SaveChangesAsync();
 

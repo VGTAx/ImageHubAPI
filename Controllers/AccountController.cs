@@ -122,7 +122,7 @@ namespace ImageHubAPI.Controllers
                 {
                     var user = await _userManager.FindByEmailAsync(login.Email!);
                     var tokenString = _jwtGenerator.CreateToken(user!);
-
+                    
                     return Ok(new { Token = tokenString, Message = "User logged in" });
                 }
 

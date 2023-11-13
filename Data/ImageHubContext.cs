@@ -14,9 +14,9 @@ namespace ImageHubAPI.Data
         public ImageHubContext(DbContextOptions<ImageHubContext> options) : base(options) { }
         public ImageHubContext() { }
 
-        public DbSet<Image> Images { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Friendship> Friendships { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Friendship> Friendships { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,7 +28,7 @@ namespace ImageHubAPI.Data
               .HasKey(d => new { d.UserId, d.LoginProvider, d.Name });
             builder.Entity<IdentityUserLogin<string>>()
               .HasKey(d => new { d.LoginProvider, d.ProviderKey });
-        }
+        }        
 
         /// <summary>
         /// Configure User Entity
