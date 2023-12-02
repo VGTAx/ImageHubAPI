@@ -1,5 +1,5 @@
 ﻿using ImageHubAPI.Controllers;
-using ImageHubAPI.Data;
+using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using Moq.EntityFrameworkCore;
 
 namespace ImageHubAPI.UnitTests
 {
@@ -19,7 +17,7 @@ namespace ImageHubAPI.UnitTests
   public class AccountControllerTests
   {
     private AccountController _controller;
-    private Mock<IImageHubContext> _contextMock;
+    private Mock<IAccountRepository> _repositoryMock;
     private Mock<SignInManager<User>> _signInManagerMock;
     private Mock<UserManager<User>> _userManagerMock;
     private Mock<IUserStore<User>> _userStoreMock;
@@ -28,22 +26,6 @@ namespace ImageHubAPI.UnitTests
     [SetUp]
     public async Task Setup()
     {
-      var users = new List<User>
-      {
-        new User { Name = "User_1", Email = "username@example.com" },
-        new User { Name = "User_2", Email = "username1@example.com" },
-        new User { Name = "User_3", Email = "username2@example.com" }
-      }.AsQueryable();
-
-      _contextMock = new Mock<IImageHubContext>();
-      _contextMock.Setup(x => x.Users)
-        .ReturnsDbSet(new List<User>
-          {
-              new User { Email = "username@example.com" },
-              new User { Email = "username1@example.com" },
-              new User { Email = "username2@example.com" }
-          }.AsQueryable()
-        );
 
       _userManagerMock = new Mock<UserManager<User>>(
         Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
@@ -53,10 +35,11 @@ namespace ImageHubAPI.UnitTests
         new Mock<IOptions<IdentityOptions>>().Object, new Mock<ILogger<SignInManager<User>>>().Object,
         new Mock<IAuthenticationSchemeProvider>().Object, new Mock<IUserConfirmation<User>>().Object);
 
+      _repositoryMock = new Mock<IAccountRepository>();
       _userStoreMock = new Mock<IUserStore<User>>();
       _jwtGeneratorMock = new Mock<IJwtGenerator>();
 
-      _controller = new AccountController(_contextMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object);
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
     }
 
     [Test]
@@ -78,16 +61,16 @@ namespace ImageHubAPI.UnitTests
     public async Task Registration_EmailNotAvailable_ReturnBadRequest()
     {
       //Arrange 
-      var registration = new Registration
-      {
-        Email = "username@example.com",
-        Name = "username",
-        Password = "passworD1!",
-        ConfirmPassword = "passworD2!"
-      };  
+      var regigstrationMock = new Mock<Registration>();
+
+      _repositoryMock
+        .Setup(x => x.IsEmailAvailable(It.IsAny<string>()))
+        .ReturnsAsync(true);
+
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
 
       //Act
-      var result = await _controller.Registration(registration);
+      var result = await _controller.Registration(regigstrationMock.Object);
 
       //Assert
       Assert.That(result, Is.InstanceOf<BadRequestObjectResult>(), "Email should not available");
@@ -103,7 +86,7 @@ namespace ImageHubAPI.UnitTests
         .Setup(um => um.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
         .ReturnsAsync(IdentityResult.Failed());
 
-      _controller = new AccountController(_contextMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object);
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
 
       //Act
       var result = await _controller.Registration(registrationMock.Object);
@@ -122,7 +105,7 @@ namespace ImageHubAPI.UnitTests
         .Setup(um => um.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
         .ReturnsAsync(IdentityResult.Success);
 
-      _controller = new AccountController(_contextMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object);
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
 
       //Act
       var result = await _controller.Registration(registrationMock.Object);
@@ -155,7 +138,7 @@ namespace ImageHubAPI.UnitTests
       _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
          .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
 
-      _controller = new AccountController(_contextMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object);
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
       //Act
       var result = await _controller.Login(loginMock.Object);
 
@@ -172,7 +155,7 @@ namespace ImageHubAPI.UnitTests
       _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
          .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
 
-      _controller = new AccountController(_contextMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object);
+      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
       //Act
       var result = await _controller.Login(loginMock.Object);
 

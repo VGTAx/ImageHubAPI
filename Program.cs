@@ -1,4 +1,5 @@
 using ImageHubAPI.Data;
+using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Service;
@@ -67,7 +68,8 @@ builder.Services.AddIdentityCore<User>()
 builder.Services.AddScoped<SignInManager<User>>();
 builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
-
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IUserFriendRepository<User>, UserFriendRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>

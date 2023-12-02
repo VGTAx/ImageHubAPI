@@ -8,10 +8,10 @@
         /// <summary>
         /// User ID which send request
         /// </summary>
-        public string? UserId { get; set; }
+        public string UserId { get; set; }
         /// <summary>
         /// User ID to which the request is sent
         /// </summary>
-        public string? FriendId { get; set; }
+        public string FriendId { get; set; }
     }
 }
