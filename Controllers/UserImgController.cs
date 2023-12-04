@@ -90,7 +90,7 @@ namespace ImageHubAPI.Controllers
             await img.CopyToAsync(fs);
           }
 
-          if (await IsImageAlreadyAdded(img.FileName, user.Id))
+          if (await IsImageAlreadyAdded(img.FileName, user!.Id))
           {
             return BadRequest($"Image \"{img.FileName}\" has already added");
           }

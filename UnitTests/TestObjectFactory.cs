@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ImageHubAPI.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -39,6 +40,6 @@ namespace UnitTests
       };
 
       return fakeControllerContext;
-    }
+    }    
   }
 }

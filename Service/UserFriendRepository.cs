@@ -53,7 +53,7 @@ namespace ImageHubAPI.Service
     /// </summary>
     /// <param name="email"></param>
     /// <returns></returns>
-    public async Task<User> GetUserByEmail(string email) =>
+    public async Task<User> GetUserByEmailAsync(string email) =>
       await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
     /// <summary>

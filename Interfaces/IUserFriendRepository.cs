@@ -3,6 +3,10 @@ using ImageHubAPI.Models;
 
 namespace ImageHubAPI.Interfaces
 {
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
   public interface IUserFriendRepository<T> where T : class
   {
     /// <summary>
@@ -24,7 +28,7 @@ namespace ImageHubAPI.Interfaces
     /// </summary>
     /// <param name="email"></param>
     /// <returns></returns>
-    Task<T> GetUserByEmail(string email);
+    Task<T> GetUserByEmailAsync(string email);
 
     /// <summary>
     /// 

@@ -24,11 +24,11 @@ namespace ImageHubAPI.UnitTests
     private Mock<IJwtGenerator> _jwtGeneratorMock;
 
     [SetUp]
-    public async Task Setup()
+    public void Setup()
     {
 
       _userManagerMock = new Mock<UserManager<User>>(
-        Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
+        Mock.Of<IUserStore<User>>(), null!, null!, null!, null!, null!, null!, null!, null!);
 
       _signInManagerMock = new Mock<SignInManager<User>>(_userManagerMock.Object,
         new Mock<IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<User>>().Object,
@@ -77,7 +77,7 @@ namespace ImageHubAPI.UnitTests
     }
 
     [Test]
-    public async Task Registration_UserManagerCreateUserFalse_ReturnBadRequest()
+    public async Task Registration_UserManagerCreateUserIsFalse_ReturnBadRequest()
     {
       //Arrange
       var registrationMock = new Mock<Registration>();

@@ -23,10 +23,9 @@ namespace ImageHubAPI.Controllers
     /// <summary>
     /// UserController constructor
     /// </summary>
-    /// <param name="configuration">Application configuration</param>
-    /// <param name="context">DB Context</param>
+    /// <param name="repository"></param>
     public UserFriendController(IUserFriendRepository<User> repository)
-    {      
+    {
       _repository = repository;
     }
 
@@ -111,18 +110,18 @@ namespace ImageHubAPI.Controllers
     /// <response code="401">User is not authorized</response>
     /// <response code="404">User not exist</response>
     /// <response code="500">Internal server error</response>
-    /// <returns>Returns an HTTP status code indicating the result of the <see cref="GetUser"/> method</returns>
-    [HttpGet(template: nameof(GetUser), Name = nameof(GetUser))]
-    public async Task<IActionResult> GetUser([FromQuery] string email)
+    /// <returns>Returns an HTTP status code indicating the result of the <see cref="GetUserByEmail"/> method</returns>
+    [HttpGet(template: nameof(GetUserByEmail), Name = nameof(GetUserByEmail))]
+    public async Task<IActionResult> GetUserByEmail([FromQuery] string email)
     {
       try
       {
         if (string.IsNullOrEmpty(email))
         {
-          return BadRequest();
+          return BadRequest("Email is null or empty");
         }
 
-        var user = await _repository.GetUserByEmail(email);
+        var user = await _repository.GetUserByEmailAsync(email);
 
         if (user == null)
         {
@@ -143,6 +142,6 @@ namespace ImageHubAPI.Controllers
     /// <param name="userId">Current user ID</param>
     /// <returns></returns>
     private bool IsUserIdValid(string userId) =>
-      User?.FindFirst("UserID").Value == userId;    
+      User?.FindFirst("UserID")?.Value == userId;    
   }
 }
