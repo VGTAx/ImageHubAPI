@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build ./ImageHubAPI.sln --no-restore
     - name: Test
-      run: dotnet test ./UnitTests/UnitTests.csproj --verbosity normal
+      run: dotnet test ./UnitTests/UnitTests.csproj --no-build --verbosity normal
