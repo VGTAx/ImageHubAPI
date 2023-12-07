@@ -70,6 +70,8 @@ builder.Services.AddScoped<UserManager<User>>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserFriendRepository<User>, UserFriendRepository>();
+builder.Services.AddScoped<IUserImgRepository<User>, UserImgRepository>();
+builder.Services.AddScoped<IFriendshipRepository<Friendship>, FriendshipRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
@@ -95,8 +97,10 @@ builder.Services.AddAuthentication(options =>
     options.AccessDeniedPath = "/api/Account/Login";
   });
 
-builder.Services.AddAuthorization(options => {
-  options.AddPolicy("UserAccess", policy => {
+builder.Services.AddAuthorization(options =>
+{
+  options.AddPolicy("UserAccess", policy =>
+  {
     policy.RequireAuthenticatedUser();
     policy.RequireClaim("UserID");
   });

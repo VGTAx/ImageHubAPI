@@ -14,7 +14,7 @@ namespace ImageHubAPI.Interfaces
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    Task AddFriend(User user);
+    Task AddFriend(T user);
     
     /// <summary>
     /// 

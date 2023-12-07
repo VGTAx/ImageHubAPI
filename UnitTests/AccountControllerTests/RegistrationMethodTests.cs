@@ -1,8 +1,8 @@
 ﻿using ImageHubAPI.Controllers;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
-using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
+using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,11 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ImageHubAPI.UnitTests
+namespace UnitTests.AccountControllerTests
 {
   [TestFixture]
-  public class AccountControllerTests
+  public class RegistrationMethodTests
   {
     private AccountController _controller;
     private Mock<IAccountRepository> _repositoryMock;
@@ -112,55 +117,6 @@ namespace ImageHubAPI.UnitTests
 
       //Assert
       Assert.That(result, Is.InstanceOf<OkObjectResult>(), "User was not registered", 123);
-    }
-
-    [Test]
-    public async Task Login_ModelIsNotValid_ReturnBadRequest()
-    {
-      //Arrange
-      var loginMock = new Mock<Login>();
-
-      _controller.ModelState.AddModelError("ModelError", "Some model error");
-
-      //Act
-      var result = await _controller.Login(loginMock.Object);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<BadRequestResult>());
-    }
-
-    [Test]
-    public async Task Login_IncorrectLoginOrPassword_ReturnUnauthorized()
-    {
-      //Arrange
-      var loginMock = new Mock<Login>();
-
-      _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-         .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
-
-      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
-      //Act
-      var result = await _controller.Login(loginMock.Object);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
-    }
-
-    [Test]
-    public async Task Login_UserLogin_ReturnOk()
-    {
-      //Arrange
-      var loginMock = new Mock<Login>();
-
-      _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-         .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-
-      _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
-      //Act
-      var result = await _controller.Login(loginMock.Object);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
   }
 }

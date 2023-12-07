@@ -4,11 +4,16 @@ using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace UnitTests
+namespace UnitTests.UserFriendControllerTests
 {
   [TestFixture]
-  public class UserFriendControllerTests
+  public class AddFriendMethodTests
   {
     private UserFriendController _userController;
     private Mock<IUserFriendRepository<User>> _repositoryMock;
@@ -28,7 +33,7 @@ namespace UnitTests
 
       _userController = new UserFriendController(_repositoryMock.Object)
       {
-        ControllerContext = TestObjectFactory.CreateControllerContext(),
+        ControllerContext = TestObjectFactory.GetControllerContext(),
       };
     }
 
@@ -67,7 +72,7 @@ namespace UnitTests
     {
       //Assert
       var addFriendDtoMock = new Mock<AddFriendDto>();
-      _userController.ControllerContext = TestObjectFactory.CreateControllerContext("UserID");
+      _userController.ControllerContext = TestObjectFactory.GetControllerContext("UserID");
 
       //Act
       var result = await _userController.AddFriend(addFriendDtoMock.Object);
@@ -89,8 +94,6 @@ namespace UnitTests
       _repositoryMock
         .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync(false);
-
-      _userController = new UserFriendController(_repositoryMock.Object);
 
       //Act
       var result = await _userController.AddFriend(addFriendDtoMock.Object);
@@ -129,8 +132,6 @@ namespace UnitTests
       var addFriendDtoMock = new Mock<AddFriendDto>();
       var userMock = new Mock<User>();
 
-
-
       _repositoryMock
         .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))
         .ReturnsAsync(userMock.Object);
@@ -139,59 +140,6 @@ namespace UnitTests
 
       //Act
       var result = await _userController.AddFriend(addFriendDtoMock.Object);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<OkObjectResult>());
-    }
-
-    [Test]
-    public async Task GetUserByEmail_EmailIsNullOrEmpty_ReturnBadRequest()
-    {
-      //Arrange
-      var emptyStr = string.Empty;
-
-      //Act
-      var result = await _userController.GetUserByEmail(emptyStr);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-    }
-
-    [Test]
-    public async Task GetUserByEmail_UserNotFound_ReturnNotFound()
-    {
-      //Arrange
-      var email = "email@mail.com";
-
-      User? user = null;
-      _repositoryMock
-        .Setup(r => r.GetUserByEmailAsync(It.IsAny<string>()))
-        .ReturnsAsync(user!);
-
-      _userController = new UserFriendController(_repositoryMock.Object);
-
-      //Act
-      var result = await _userController.GetUserByEmail(email);
-
-      //Assert
-      Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
-    }
-
-    [Test]
-    public async Task GetUserByEmail_UserReceived_ReturnOk()
-    {
-      //Arrange
-      var email = "email@mail.com";
-
-      var user = new User();
-      _repositoryMock
-        .Setup(r => r.GetUserByEmailAsync(It.IsAny<string>()))
-        .ReturnsAsync(user);
-
-      _userController = new UserFriendController(_repositoryMock.Object);
-
-      //Act
-      var result = await _userController.GetUserByEmail(email);
 
       //Assert
       Assert.That(result, Is.InstanceOf<OkObjectResult>());

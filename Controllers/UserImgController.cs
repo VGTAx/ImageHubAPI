@@ -1,9 +1,8 @@
-﻿using ImageHubAPI.Data;
-using ImageHubAPI.DTOs;
+﻿using ImageHubAPI.DTOs;
+using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ImageHubAPI.Controllers
 {
@@ -15,18 +14,29 @@ namespace ImageHubAPI.Controllers
   [ApiController]
   public class UserImgController : ControllerBase
   {
-    private readonly ImageHubContext _context;
+
     private readonly IConfiguration _configuration;
+    private readonly IUserImgRepository<User> _userImgRepository;
+    private readonly IUserFriendRepository<User> _userFriendRepository;
+    private readonly IFriendshipRepository<Friendship> _friendshipRepository;
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="userImgRepository"></param>
+    /// <param name="userFriendRepository"></param>
     /// <param name="configuration"></param>
-    public UserImgController(ImageHubContext context, IConfiguration configuration)
+    /// <param name="friendshipRepository"></param>
+    public UserImgController(
+      IUserImgRepository<User> userImgRepository,
+      IUserFriendRepository<User> userFriendRepository,
+      IConfiguration configuration,
+      IFriendshipRepository<Friendship> friendshipRepository)
     {
-      _context = context;
+      _userImgRepository = userImgRepository;
+      _userFriendRepository = userFriendRepository;
       _configuration = configuration;
+      _friendshipRepository = friendshipRepository;
     }
 
     /// <summary>
@@ -56,14 +66,14 @@ namespace ImageHubAPI.Controllers
           return BadRequest();
         }
 
-        if (!await IsUserExist(uploadImgDto.UserID!))
+        if (!await _userImgRepository.IsUserExistAsync(uploadImgDto.UserID!))
         {
           return NotFound($"User with ID:{uploadImgDto.UserID} not exist");
         }
 
         if (!IsUserIdValid(uploadImgDto.UserID!))
         {
-          return StatusCode(403, "There are no permissions to do the operation");
+          return Forbid("There are no permissions to do the operation");
         }
 
         if (uploadImgDto.Images is null || uploadImgDto.Images.Count == 0)
@@ -71,7 +81,7 @@ namespace ImageHubAPI.Controllers
           return BadRequest("No images to download");
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == uploadImgDto.UserID);
+        var user = await _userFriendRepository.GetUserByIdAsync(uploadImgDto.UserID!);
 
         var images = uploadImgDto.Images;
         var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
@@ -90,7 +100,7 @@ namespace ImageHubAPI.Controllers
             await img.CopyToAsync(fs);
           }
 
-          if (await IsImageAlreadyAdded(img.FileName, user!.Id))
+          if (!await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
           {
             return BadRequest($"Image \"{img.FileName}\" has already added");
           }
@@ -105,10 +115,10 @@ namespace ImageHubAPI.Controllers
 
           user!.AddImages(image);
 
-          _context.Users.Update(user);
+          _userImgRepository.UpdateUserWithImages(user);
         }
 
-        await _context.SaveChangesAsync();
+        await _userImgRepository.SaveChangesAsync();
 
         return Ok($"File(s) has(have) uploaded. Count:{uploadImgDto.Images.Count}");
       }
@@ -145,19 +155,17 @@ namespace ImageHubAPI.Controllers
           return BadRequest("UserId is required!");
         }
 
-        if (!await IsUserExist(userId!))
+        if (!await _userImgRepository.IsUserExistAsync(userId!))
         {
           return NotFound($"User with ID:{userId} not exist");
         }
 
         if (!IsUserIdValid(userId))
         {
-          return StatusCode(403, "There are no permissions to do the operation");
+          return Forbid("There are no permissions to do the operation");
         }
 
-        var images = _context.Images
-          .Where(i => i.UserId == userId)
-          .Select(i => _configuration.GetSection("PathImgHub").Value + i.Path);
+        var images = await _userImgRepository.GetImgByUserIdAsync(userId);
 
         if (!images.Any())
         {
@@ -198,22 +206,20 @@ namespace ImageHubAPI.Controllers
           return BadRequest($"Friend ID is required");
         }
 
-        if (!await IsUserExist(friendId))
+        if (!await _userImgRepository.IsUserExistAsync(friendId))
         {
           return NotFound($"User with ID: {friendId} not exist");
         }
-        var userId = User.FindFirst("UserID")!.Value;
+        var userId = User?.FindFirst("UserID")?.Value;
 
-        var availableFriendImg = await _context.Friendships.FirstOrDefaultAsync(fr => fr.FriendId == friendId);
+        var availableFriendImg = await _friendshipRepository.GetFriendshipAsync(userId, friendId);
 
         if (availableFriendImg == null || !IsUserIdValid(userId))
         {
-          return StatusCode(403, "There are no permissions to do the operation");
+          return Forbid("There are no permissions to do the operation");
         }
 
-        var images = _context.Images
-          .Where(i => i.UserId == friendId)
-          .Select(i => _configuration.GetSection("PathImgHub").Value + i.Path);
+        var images = await _userImgRepository.GetImgByUserIdAsync(friendId);
 
         if (!images.Any())
         {
@@ -227,22 +233,6 @@ namespace ImageHubAPI.Controllers
         return StatusCode(500, "Internal server error");
       }
     }
-    /// <summary>
-    /// Checks the existence of a user
-    /// </summary>
-    /// <param name="userId">User ID</param>
-    /// <returns>Result checking the existence of a user. True if user exists, else false</returns>
-    private async Task<bool> IsUserExist(string userId) =>
-        await _context.Users.AnyAsync(u => u.Id == userId);
-
-    /// <summary>
-    /// Checks an image has been added or not
-    /// </summary>
-    /// <param name="imgName">Image name</param>
-    /// <param name="userId">User ID</param>
-    /// <returns>Returns the result of checking an image has been added or not. True if image has been added, else false</returns>
-    private async Task<bool> IsImageAlreadyAdded(string imgName, string userId) =>
-        await _context.Images.AnyAsync(i => i.Title == imgName && i.UserId == userId);
 
     /// <summary>
     /// Checks the user id from claims and the current id. 
@@ -250,6 +240,6 @@ namespace ImageHubAPI.Controllers
     /// <param name="userId">Current user ID</param>
     /// <returns></returns>
     private bool IsUserIdValid(string userId) =>
-      User.FindFirst("UserID")!.Value == userId;
+      User?.FindFirst("UserID")?.Value == userId;
   }
 }

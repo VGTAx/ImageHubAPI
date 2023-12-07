@@ -13,7 +13,12 @@ namespace UnitTests
 {
   public static class TestObjectFactory
   {
-    public static ControllerContext CreateControllerContext(string? returnClaimType = null)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="returnClaimType"></param>
+    /// <returns></returns>
+    public static ControllerContext GetControllerContext(string? returnClaimType = null)
     {
       var fakeClaimsPrincipal = new Mock<ClaimsPrincipal>();
             
