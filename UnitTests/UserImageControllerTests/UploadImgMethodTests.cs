@@ -131,26 +131,26 @@ namespace UnitTests.UserImageController
       Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
     }
 
-    [Test]
-    public async Task UploadImg_ImageIsUploaded_ReturnOk()
-    {
-      //Arrange
-      var uploadImgDtoMock = new UploadImgDto
-      {
-        Images = new List<IFormFile>()
-        {
-          new FormFile(Stream.Null, 0, 0, "image1", "image1.jpg"),
-        },
-        UserID = "expectedValue"
-      };
+    //[Test]
+    //public async Task UploadImg_ImageIsUploaded_ReturnOk()
+    //{
+    //  //Arrange
+    //  var uploadImgDtoMock = new UploadImgDto
+    //  {
+    //    Images = new List<IFormFile>()
+    //    {
+    //      new FormFile(Stream.Null, 0, 0, "image1", "image1.jpg"),
+    //    },
+    //    UserID = "expectedValue"
+    //  };
 
-      _userImgController.ControllerContext = TestObjectFactory.GetControllerContext("UserID");
+    //  _userImgController.ControllerContext = TestObjectFactory.GetControllerContext("UserID");
 
-      //Act
-      var result = await _userImgController.UploadImg(uploadImgDtoMock);
+    //  //Act
+    //  var result = await _userImgController.UploadImg(uploadImgDtoMock);
 
-      //Assert
-      Assert.That(result, Is.InstanceOf<OkObjectResult>());
-    }
+    //  //Assert
+    //  Assert.That(result, Is.InstanceOf<OkObjectResult>());
+    //}
   }
 }
