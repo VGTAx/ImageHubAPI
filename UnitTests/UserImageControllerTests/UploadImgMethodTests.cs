@@ -45,6 +45,13 @@ namespace UnitTests.UserImageController
         .ReturnsAsync(new Friendship());
 
       var configSectionMock = new Mock<IConfigurationSection>();
+      configSectionMock
+        .Setup(cs => cs.Key)
+        .Returns("someSection");
+      configSectionMock
+        .Setup(cs => cs.Value)
+        .Returns("someValueSection");
+
       _configuration = new Mock<IConfiguration>();
       _configuration
         .Setup(x => x.GetSection(It.IsAny<string>()))
