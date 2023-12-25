@@ -117,12 +117,23 @@ namespace ImageHubAPI.Controllers
           return BadRequest();
         }
 
+        var user = await _userManager.FindByEmailAsync(login.Email!);
+
+        if (user is null)
+        {
+          return NotFound($"User with {login.Email} not found");
+        }
+
         var result = await _signInManager.PasswordSignInAsync(login.Email!, login.Password!, login.RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
-        {
-          var user = await _userManager.FindByEmailAsync(login.Email!);
+        {          
           var tokenString = _jwtGenerator.CreateToken(user!);
+
+          if(String.IsNullOrEmpty(tokenString)) 
+          {
+            return BadRequest("Jwt Token not created");
+          }
 
           return Ok(new { Token = tokenString, Message = "User logged in" });
         }

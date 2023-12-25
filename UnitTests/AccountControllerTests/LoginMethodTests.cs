@@ -3,92 +3,133 @@ using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 
 namespace UnitTests.AccountControllerTests
 {
-    [TestFixture]
-    public class AccountControllerTests
+  [TestFixture]
+  public class LoginMethodTests
+  {
+    [Test]
+    public async Task Login_ModelIsNotValid_ReturnBadRequest()
     {
-        private AccountController _controller;
-        private Mock<IAccountRepository> _repositoryMock;
-        private Mock<SignInManager<User>> _signInManagerMock;
-        private Mock<UserManager<User>> _userManagerMock;
-        private Mock<IUserStore<User>> _userStoreMock;
-        private Mock<IJwtGenerator> _jwtGeneratorMock;
+      //Arrange
+      var stubLogin = new Mock<Login>();
+      var stubUserManager = TestObjectFactory.GetUserManager();
+      var stubSignInManager = TestObjectFactory.GetSignInManager();
+      var stubRepository = new Mock<IAccountRepository>();
+      var stubJwtGenerator = new Mock<IJwtGenerator>();
+      var stubUserStore = new Mock<IUserStore<User>>();
+      var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
 
-        [SetUp]
-        public void Setup()
-        {
+      controller.ModelState.AddModelError("ModelError", "Some model error");
 
-            _userManagerMock = new Mock<UserManager<User>>(
-              Mock.Of<IUserStore<User>>(), null!, null!, null!, null!, null!, null!, null!, null!);
+      //Act
+      var result = await controller.Login(stubLogin.Object);
 
-            _signInManagerMock = new Mock<SignInManager<User>>(_userManagerMock.Object,
-              new Mock<IHttpContextAccessor>().Object, new Mock<IUserClaimsPrincipalFactory<User>>().Object,
-              new Mock<IOptions<IdentityOptions>>().Object, new Mock<ILogger<SignInManager<User>>>().Object,
-              new Mock<IAuthenticationSchemeProvider>().Object, new Mock<IUserConfirmation<User>>().Object);
-
-            _repositoryMock = new Mock<IAccountRepository>();
-            _userStoreMock = new Mock<IUserStore<User>>();
-            _jwtGeneratorMock = new Mock<IJwtGenerator>();
-
-            _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
-        }       
-
-        [Test]
-        public async Task Login_ModelIsNotValid_ReturnBadRequest()
-        {
-            //Arrange
-            var loginMock = new Mock<Login>();
-
-            _controller.ModelState.AddModelError("ModelError", "Some model error");
-
-            //Act
-            var result = await _controller.Login(loginMock.Object);
-
-            //Assert
-            Assert.That(result, Is.InstanceOf<BadRequestResult>());
-        }
-
-        [Test]
-        public async Task Login_IncorrectLoginOrPassword_ReturnUnauthorized()
-        {
-            //Arrange
-            var loginMock = new Mock<Login>();
-
-            _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-               .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
-
-            _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
-            //Act
-            var result = await _controller.Login(loginMock.Object);
-
-            //Assert
-            Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
-        }
-
-        [Test]
-        public async Task Login_UserLogin_ReturnOk()
-        {
-            //Arrange
-            var loginMock = new Mock<Login>();
-
-            _signInManagerMock.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
-               .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-
-            _controller = new AccountController(_userManagerMock.Object, _signInManagerMock.Object, _userStoreMock.Object, _jwtGeneratorMock.Object, _repositoryMock.Object);
-            //Act
-            var result = await _controller.Login(loginMock.Object);
-
-            //Assert
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        }
+      //Assert
+      Assert.That(result, Is.InstanceOf<BadRequestResult>());
     }
+
+    [Test]
+    public async Task Login_IncorrectLoginOrPassword_ReturnUnauthorized()
+    {
+      //Arrange
+      var stubLogin = new Mock<Login>();
+      var stubUserManager = TestObjectFactory.GetUserManager();
+      var stubSignInManager = TestObjectFactory.GetSignInManager();
+      var stubRepository = new Mock<IAccountRepository>();
+      var stubJwtGenerator = new Mock<IJwtGenerator>();
+      var stubUserStore = new Mock<IUserStore<User>>();
+      var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
+
+      stubUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
+        .ReturnsAsync(new User());
+
+      stubSignInManager.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+         .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+
+      //Act
+      var result = await controller.Login(stubLogin.Object);
+
+      //Assert
+      Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
+    }
+
+    [Test]
+    public async Task Login_UserNotFound_ReturnNotFound()
+    {
+      //Arrange
+      var stubLogin = new Mock<Login>();
+      var stubUserManager = TestObjectFactory.GetUserManager();
+      var stubSignInManager = TestObjectFactory.GetSignInManager();
+      var stubRepository = new Mock<IAccountRepository>();
+      var stubJwtGenerator = new Mock<IJwtGenerator>();
+      var stubUserStore = new Mock<IUserStore<User>>();
+      var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
+
+      stubUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
+        .ReturnsAsync(null as User);
+
+      //Act
+      var result = await controller.Login(stubLogin.Object);
+
+      //Assert
+      Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+    }
+
+    [Test]
+    public async Task Login_JwtTokenNotCreated_ReturnBadRequest()
+    {
+      //Arrange
+      var stubLogin = new Mock<Login>();
+      var stubUserManager = TestObjectFactory.GetUserManager();
+      var stubSignInManager = TestObjectFactory.GetSignInManager();
+      var stubRepository = new Mock<IAccountRepository>();
+      var stubJwtGenerator = new Mock<IJwtGenerator>();
+      var stubUserStore = new Mock<IUserStore<User>>();
+      var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
+
+      stubUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
+        .ReturnsAsync(new User());
+      stubSignInManager.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+        .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+      stubJwtGenerator.Setup(jg => jg.CreateToken(It.IsAny<User>()))
+        .Returns(string.Empty);
+
+      //Act
+      var result = await controller.Login(stubLogin.Object);
+
+      //Assert
+      Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+    }
+
+    [Test]
+    public async Task Login_UserLoginSuccessful_ReturnOk()
+    {
+      //Arrange
+      var stubLogin = new Mock<Login>();
+      var stubUserManager = TestObjectFactory.GetUserManager();
+      var stubSignInManager = TestObjectFactory.GetSignInManager();
+      var stubRepository = new Mock<IAccountRepository>();
+      var stubJwtGenerator = new Mock<IJwtGenerator>();
+      var stubUserStore = new Mock<IUserStore<User>>();
+      var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
+           
+      stubUserManager.Setup(um => um.FindByEmailAsync(It.IsAny<string>()))
+        .ReturnsAsync(new User());
+      stubSignInManager.Setup(sim => sim.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+        .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+      stubJwtGenerator.Setup(jg => jg.CreateToken(It.IsAny<User>()))
+        .Returns("some_token");
+
+      //Act
+      var result = await controller.Login(stubLogin.Object);
+
+      //Assert
+      Assert.That(result, Is.InstanceOf<OkObjectResult>());
+    }
+  }
 }

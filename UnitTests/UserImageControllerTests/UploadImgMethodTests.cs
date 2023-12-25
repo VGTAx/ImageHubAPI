@@ -63,16 +63,19 @@ namespace UnitTests.UserImageController
       };
     }
 
+    
     [Test]
+    [Category("123")]
     public async Task UploadImg_ModelIsNotValid_ReturnBadRequest()
     {
       //Arrange
-      var uploadImgDtoMock = new Mock<UploadImgDto>();
+      var uploadImgDtoMock = new Mock<UploadImgDto>(); 
 
-      _userImgController.ModelState.AddModelError("someKey", "someMessage");
+      var userImgController = new UserImgController(null, null, null, null);
 
+      userImgController.ModelState.AddModelError("someKey", "someMessage");
       //Act
-      var result = await _userImgController.UploadImg(uploadImgDtoMock.Object);
+      var result = await userImgController.UploadImg(uploadImgDtoMock.Object);
 
       //Assert
       Assert.That(result, Is.InstanceOf<BadRequestResult>());
@@ -96,6 +99,7 @@ namespace UnitTests.UserImageController
     }
 
     [Test]
+    [Category("123")]
     public async Task UploadImg_UserIdIsNotValid_ReturnForbid()
     {
       //Arrange

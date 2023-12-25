@@ -62,7 +62,7 @@ namespace ImageHubAPI.Controllers
 
         if (!await _repository.IsUserExistAsync(addFriendDto.FriendId!))
         {
-          return NotFound($"User with ID:{addFriendDto.FriendId} not exist");
+          return NotFound($"Friend with ID:{addFriendDto.FriendId} not exist");
         }
 
         if (!IsUserIdValid(addFriendDto.UserId!))
@@ -79,7 +79,7 @@ namespace ImageHubAPI.Controllers
 
         if(requester == null) 
         {
-          return NotFound($"User with ID:{addFriendDto.UserId} not exist");
+          return NotFound($"User-Requester with ID:{addFriendDto.UserId} not exist");
         }
 
         var friendship = new Friendship
