@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -62,6 +63,18 @@ namespace UnitTests
       };
     }
 
+    public static UserImgController GetUserImageController(
+      IUserImgRepository<User> imgRepository,
+      IUserFriendRepository<User> friendRepository,
+      IConfiguration configuration,
+      IFriendshipRepository<Friendship> friendshipRepository,
+      string? returnClaimType = null)
+    {
+      return new UserImgController(imgRepository, friendRepository, configuration, friendshipRepository)
+      {
+        ControllerContext = GetControllerContext(returnClaimType)
+      };
+    }
 
     public static Mock<UserManager<User>> GetUserManager()
     {

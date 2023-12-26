@@ -1,5 +1,4 @@
-﻿using ImageHubAPI.Controllers;
-using ImageHubAPI.Interfaces;
+﻿using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,53 +8,20 @@ namespace UnitTests.UserImageController
 {
   public class GetUserImgMethodTests
   {
-    private Mock<IUserImgRepository<User>> _userImgRepositoryMock;
-    private Mock<IUserFriendRepository<User>> _userFriendRepositoryMock;
-    private Mock<IFriendshipRepository<Friendship>> _friendshipRepositoryMock;
-    private Mock<IConfiguration> _configuration;
-    private UserImgController _userImgController;
-
-    [SetUp]
-    public void Setup()
-    {
-      _userImgRepositoryMock = new Mock<IUserImgRepository<User>>();
-      _userImgRepositoryMock
-        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
-        .ReturnsAsync(true);
-      _userImgRepositoryMock
-        .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
-
-      _userFriendRepositoryMock = new Mock<IUserFriendRepository<User>>();
-      _userFriendRepositoryMock
-        .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
-        .ReturnsAsync(new User());
-
-      _friendshipRepositoryMock = new Mock<IFriendshipRepository<Friendship>>();
-      _friendshipRepositoryMock
-        .Setup(f => f.GetFriendshipAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(new Friendship());
-
-      var configSectionMock = new Mock<IConfigurationSection>();
-      _configuration = new Mock<IConfiguration>();
-      _configuration
-        .Setup(x => x.GetSection(It.IsAny<string>()))
-        .Returns(configSectionMock.Object);
-
-      _userImgController = new UserImgController(_userImgRepositoryMock.Object, _userFriendRepositoryMock.Object, _configuration.Object, _friendshipRepositoryMock.Object)
-      {
-        ControllerContext = TestObjectFactory.GetControllerContext()
-      };
-    }
-
     [Test]
     public async Task GetUserImg_UserIdNullOrEmpty_ReturnBadRequest()
     {
       //Arrange
       var userId = string.Empty;
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
+
+      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
 
       //Act
-      var result = await _userImgController.GetUserImg(userId);
+      var result = await controller.GetUserImg(userId);
 
       //Assert
       Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -66,12 +32,19 @@ namespace UnitTests.UserImageController
     {
       //Arrange
       var userId = "id";
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
 
-      _userImgRepositoryMock
-        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
-        .ReturnsAsync(false);
+      _stubImgRepository
+       .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+       .ReturnsAsync(false);
+
+      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
+
       //Act
-      var result = await _userImgController.GetUserImg(userId);
+      var result = await controller.GetUserImg(userId);
 
       //Assert
       Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -81,10 +54,22 @@ namespace UnitTests.UserImageController
     public async Task GetUserImg_UserIdIsNotValid_ReturnForbid()
     {
       //Arrange
-      var userId = "incorrectId";
+      var incorrectUserId = "incorrectId";
+
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
+
+      _stubImgRepository
+       .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+       .ReturnsAsync(true);
+
+      var controller
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
 
       //Act
-      var result = await _userImgController.GetUserImg(userId);
+      var result = await controller.GetUserImg(incorrectUserId);
 
       //Assert
       Assert.That(result, Is.InstanceOf<ForbidResult>());
@@ -94,13 +79,25 @@ namespace UnitTests.UserImageController
     public async Task GetUserImg_UserHasNotImages_ReturnNotFound()
     {
       //Arrange
-      var userId = "expectedValue";
-      _userImgRepositoryMock
+      var expectedUserId = "expectedValue";
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
+
+      _stubImgRepository
+       .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+       .ReturnsAsync(true);
+
+      _stubImgRepository
         .Setup(ui => ui.GetImgByUserIdAsync(It.IsAny<string>()))
         .ReturnsAsync(new List<string>());
-      _userImgController.ControllerContext = TestObjectFactory.GetControllerContext("UserID");
+
+      var controller
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, "UserID");
+
       //Act
-      var result = await _userImgController.GetUserImg(userId);
+      var result = await controller.GetUserImg(expectedUserId);
 
       //Assert
       Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -110,19 +107,30 @@ namespace UnitTests.UserImageController
     public async Task GetUserImg_ImageIsGot_ReturnOk()
     {
       //Arrange
-      var userId = "expectedValue";
+      var expectedUserId = "expectedValue";
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
       var images = new List<string>
       {
         "someAdressImg_1",
         "someAdressImg_2",
       };
 
-      _userImgRepositoryMock
+      _stubImgRepository
+       .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+       .ReturnsAsync(true);
+
+      _stubImgRepository
         .Setup(ui => ui.GetImgByUserIdAsync(It.IsAny<string>()))
         .ReturnsAsync(images);
-      _userImgController.ControllerContext = TestObjectFactory.GetControllerContext("UserID");
+
+      var controller
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, "UserID");
+
       //Act
-      var result = await _userImgController.GetUserImg(userId);
+      var result = await controller.GetUserImg(expectedUserId);
 
       //Assert
       Assert.That(result, Is.InstanceOf<OkObjectResult>());

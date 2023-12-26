@@ -1,11 +1,8 @@
-﻿using ImageHubAPI.Data;
-using ImageHubAPI.DTOs;
-using ImageHubAPI.Models;
+﻿using ImageHubAPI.DTOs;
 using ImageHubAPI.Interfaces;
-using ImageHubAPI.Service;
+using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace ImageHubAPI.Controllers
@@ -17,7 +14,7 @@ namespace ImageHubAPI.Controllers
   [Route("api/[controller]")]
   [ApiController]
   public class UserFriendController : ControllerBase
-  {    
+  {
     private readonly IUserFriendRepository<User> _repository;
 
     /// <summary>
@@ -54,7 +51,7 @@ namespace ImageHubAPI.Controllers
         {
           return BadRequest();
         }
-        
+
         if (!await _repository.IsUserExistAsync(addFriendDto.UserId!))
         {
           return NotFound($"User with ID:{addFriendDto.UserId} not exist");
@@ -68,7 +65,7 @@ namespace ImageHubAPI.Controllers
         if (!IsUserIdValid(addFriendDto.UserId!))
         {
           return Forbid("There are no permissions to do the operation");
-        }        
+        }
 
         if (!await _repository.IsFriendAddAsync(addFriendDto.UserId!, addFriendDto.FriendId!))
         {
@@ -77,7 +74,7 @@ namespace ImageHubAPI.Controllers
 
         var requester = await _repository.GetUserByIdAsync(addFriendDto.UserId);
 
-        if(requester == null) 
+        if (requester == null)
         {
           return NotFound($"User-Requester with ID:{addFriendDto.UserId} not exist");
         }
@@ -100,7 +97,7 @@ namespace ImageHubAPI.Controllers
         return StatusCode(500, "Internal server error");
       }
     }
-    
+
     /// <summary>
     /// Return user by email
     /// </summary>
@@ -142,6 +139,6 @@ namespace ImageHubAPI.Controllers
     /// <param name="userId">Current user ID</param>
     /// <returns></returns>
     private bool IsUserIdValid(string userId) =>
-      User?.FindFirst("UserID")?.Value == userId;    
+      User?.FindFirst("UserID")?.Value == userId;
   }
 }
