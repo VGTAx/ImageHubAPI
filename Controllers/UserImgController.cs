@@ -14,7 +14,6 @@ namespace ImageHubAPI.Controllers
   [ApiController]
   public class UserImgController : ControllerBase
   {
-
     private readonly IConfiguration _configuration;
     private readonly IUserImgRepository<User> _userImgRepository;
     private readonly IUserFriendRepository<User> _userFriendRepository;

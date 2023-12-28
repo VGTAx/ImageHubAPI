@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ImageHubAPI.Data
 {
-  /// <summary>
-  /// 
-  /// </summary>
-  public interface IImageHubContext : IDisposable
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IImageHubContext : IDisposable
   {
     /// <summary>
     /// 

@@ -108,6 +108,33 @@ namespace UnitTests.UserFriendControllerTests
     }
 
     [Test]
+    public async Task AddFriend_ShouldCallAddFriendshipOnUser_WhenFriendIsProvided()
+    {
+      //Arrange
+      var _stubAddFriendDto = new Mock<AddFriendDto>();
+      var _stubRepostitory = new Mock<IUserFriendRepository<User>>();
+      var controller = TestObjectFactory.GetUserFriendController(_stubRepostitory.Object, null);
+      var _mockUser = new Mock<User>();
+
+      _stubRepostitory
+        .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
+        .ReturnsAsync(true);
+      _stubRepostitory
+        .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
+        .ReturnsAsync(true);
+      _stubRepostitory
+        .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
+        .ReturnsAsync(_mockUser.Object);
+
+      //Act
+      await controller.AddFriend(_stubAddFriendDto.Object);
+
+      //Assert
+
+      Mock.Get(_mockUser.Object).Verify(u => u.AddFriendship(It.IsAny<Friendship>()));
+    }
+
+    [Test]
     public async Task AddFriend_ShouldCallAddFriendOnIUserFriendRepository_WhenFriendIsProvided()
     {
       //Arrange

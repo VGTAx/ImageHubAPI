@@ -8,7 +8,7 @@ using Moq;
 
 namespace UnitTests.UserImageController
 {
-  [TestFixture]
+    [TestFixture]
   public class UploadImgMethodTests
   {
     [Test]
@@ -227,7 +227,7 @@ namespace UnitTests.UserImageController
       await controller.UploadImg(uploadImgDtoMock);
 
       //Assert
-      Mock.Get(_mockImgRepository.Object).Verify(x => x.UpdateUserWithImages(It.IsAny<User>()));
+      Mock.Get(_mockImgRepository.Object).Verify(x => x.UpdateUserWithImages(It.IsAny<User>()), Times.Once());
     }
 
     [Test]
@@ -277,7 +277,59 @@ namespace UnitTests.UserImageController
       await controller.UploadImg(uploadImgDtoMock);
 
       //Assert
-      Mock.Get(_mockImgRepository.Object).Verify(x => x.SaveChangesAsync());
+      Mock.Get(_mockImgRepository.Object).Verify(x => x.SaveChangesAsync(), Times.Once());
     }
+
+    [Test]
+    public async Task UploadImg_ShouldCallAddImagesOnUser_WhenImageIsProvided()
+    {
+      //Arrange
+      var uploadImgDtoMock = new UploadImgDto
+      {
+        Images = new List<IFormFile>()
+        {
+          new FormFile(Stream.Null, 0, 0, "image1", "image1.jpg"),
+        },
+        UserID = "expectedValue"
+      };
+
+      var _stubImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
+      var _mockUser = new Mock<User>();
+
+      _stubImgRepository
+        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+        .ReturnsAsync(true);
+      _stubFriendRepostitory
+        .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
+        .ReturnsAsync(_mockUser.Object);
+
+      _stubImgRepository
+        .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
+        .ReturnsAsync(true);
+
+      var stubConfigSection = new Mock<IConfigurationSection>();
+      stubConfigSection
+        .Setup(cs => cs.Key)
+        .Returns("someSection");
+      stubConfigSection
+        .Setup(cs => cs.Value)
+        .Returns("someValueSection");
+      _stubConfiguration
+        .Setup(x => x.GetSection(It.IsAny<string>()))
+        .Returns(stubConfigSection.Object);
+
+      var controller
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, "UserID");
+
+      //Act
+      await controller.UploadImg(uploadImgDtoMock);
+
+      //Assert
+      Mock.Get(_mockUser.Object).Verify(x => x.AddImages(It.IsAny<Image>()), Times.Once());
+    }
+
   }
 }

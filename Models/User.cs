@@ -38,13 +38,13 @@ namespace ImageHubAPI.Models
         /// Add image to user
         /// </summary>
         /// <param name="image">Image to add</param>
-        public void AddImages(Image image) => _userImages!.Add(image);
+        public virtual void AddImages(Image image) => _userImages!.Add(image);
 
         /// <summary>
         /// Add friendship beetween users
         /// </summary>
         /// <param name="friendship">Friendship to add</param>
-        public void AddFriendship(Friendship friendship) => _friendships.Add(friendship);
+        public virtual void AddFriendship(Friendship friendship) => _friendships.Add(friendship);
     }
 }
 
