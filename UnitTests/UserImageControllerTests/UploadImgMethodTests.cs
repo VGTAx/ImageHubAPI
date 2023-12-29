@@ -285,7 +285,9 @@ namespace UnitTests.UserImageController
       _stubDirectory
         .Setup(x => x.Exists(It.IsAny<string>()))
         .Returns(true);
-
+      _stubDirectory
+        .Setup(d => d.CreateDirectory(It.IsAny<string>()))
+        .Returns(() => new DirectoryInfo(It.IsAny<string>()));
       var controller
          = TestObjectFactory.GetUserImageController(_mockImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
 
