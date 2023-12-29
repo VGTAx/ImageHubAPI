@@ -89,10 +89,10 @@ namespace ImageHubAPI.Controllers
         var images = uploadImgDto.Images;
         var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
 
-        if (!_directory.Exists(uploadPath))
-        {
-          _directory.CreateDirectory(uploadPath);
-        }
+        //if (!_directory.Exists(uploadPath))
+        //{
+        //  _directory.CreateDirectory(uploadPath);
+        //}
 
         foreach (var img in images)
         {
