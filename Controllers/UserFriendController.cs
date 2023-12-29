@@ -20,7 +20,7 @@ namespace ImageHubAPI.Controllers
     /// <summary>
     /// UserController constructor
     /// </summary>
-    /// <param name="repository"></param>
+    /// <param name="repository">Repository for user friend</param>
     public UserFriendController(IUserFriendRepository<User> repository)
     {
       _repository = repository;

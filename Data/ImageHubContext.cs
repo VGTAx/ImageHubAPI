@@ -11,13 +11,31 @@ namespace ImageHubAPI.Data
     /// </summary>
     public class ImageHubContext : IdentityUserContext<User>, IImageHubContext
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="options"></param>
         public ImageHubContext(DbContextOptions<ImageHubContext> options) : base(options) { }
+        /// <summary>
+        /// 
+        /// </summary>
         public ImageHubContext() { }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DbSet<Image> Images { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DbSet<User> Users { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public virtual DbSet<Friendship> Friendships { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new FriendshipEntityTypeConfiguration());
@@ -62,7 +80,7 @@ namespace ImageHubAPI.Data
                         ConcurrencyStamp = Guid.NewGuid().ToString(),
                         SecurityStamp = Guid.NewGuid().ToString(),
                         LockoutEnabled = true,
-                        PasswordHash = new PasswordHasher<User>().HashPassword(null, "passworD1!")
+                        PasswordHash = new PasswordHasher<User>().HashPassword(null!, "passworD1!")
                     },
                     new User
                     {
@@ -75,7 +93,7 @@ namespace ImageHubAPI.Data
                         ConcurrencyStamp = Guid.NewGuid().ToString(),
                         SecurityStamp = Guid.NewGuid().ToString(),
                         LockoutEnabled = true,
-                        PasswordHash = new PasswordHasher<User>().HashPassword(null, "passworD1!")
+                        PasswordHash = new PasswordHasher<User>().HashPassword(null!, "passworD1!")
                     }
                   );
             }

@@ -18,24 +18,28 @@ namespace ImageHubAPI.Controllers
     private readonly IUserImgRepository<User> _userImgRepository;
     private readonly IUserFriendRepository<User> _userFriendRepository;
     private readonly IFriendshipRepository<Friendship> _friendshipRepository;
+    private readonly IDirectory _directory;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the user images controller.
     /// </summary>
-    /// <param name="userImgRepository"></param>
-    /// <param name="userFriendRepository"></param>
-    /// <param name="configuration"></param>
-    /// <param name="friendshipRepository"></param>
+    /// <param name="userImgRepository">Repository for user images.</param>
+    /// <param name="userFriendRepository">Repository for user friends.</param>
+    /// <param name="configuration">Application configuration.</param>
+    /// <param name="friendshipRepository">Friendship repository.</param>
+    /// <param name="directory">Interface for working with the file system or directories.</param>
     public UserImgController(
       IUserImgRepository<User> userImgRepository,
       IUserFriendRepository<User> userFriendRepository,
       IConfiguration configuration,
-      IFriendshipRepository<Friendship> friendshipRepository)
+      IFriendshipRepository<Friendship> friendshipRepository,
+      IDirectory directory)
     {
       _userImgRepository = userImgRepository;
       _userFriendRepository = userFriendRepository;
       _configuration = configuration;
       _friendshipRepository = friendshipRepository;
+      _directory = directory;
     }
 
     /// <summary>
@@ -85,9 +89,9 @@ namespace ImageHubAPI.Controllers
         var images = uploadImgDto.Images;
         var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
 
-        if (!Directory.Exists(uploadPath))
+        if (!_directory.Exists(uploadPath))
         {
-          Directory.CreateDirectory(uploadPath);
+          _directory.CreateDirectory(uploadPath);
         }
 
         foreach (var img in images)
@@ -211,9 +215,9 @@ namespace ImageHubAPI.Controllers
         }
         var userId = User?.FindFirst("UserID")?.Value;
 
-        var availableFriendImg = await _friendshipRepository.GetFriendshipAsync(userId, friendId);
+        var availableFriendImg = await _friendshipRepository.GetFriendshipAsync(userId!, friendId);
 
-        if (availableFriendImg == null || !IsUserIdValid(userId))
+        if (availableFriendImg == null || !IsUserIdValid(userId!))
         {
           return Forbid("There are no permissions to do the operation");
         }
