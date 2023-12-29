@@ -10,7 +10,7 @@ namespace ImageHubAPI.Service
   /// </summary>
   public class UserFriendRepository : IUserFriendRepository<User>
   {
-    private readonly ImageHubContext _context;
+    private readonly ImageHubContext? _context;
 
     /// <summary>
     /// 
