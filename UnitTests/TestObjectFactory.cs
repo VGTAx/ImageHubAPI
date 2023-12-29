@@ -68,9 +68,10 @@ namespace UnitTests
       IUserFriendRepository<User> friendRepository,
       IConfiguration configuration,
       IFriendshipRepository<Friendship> friendshipRepository,
+      IDirectory directory,
       string? returnClaimType = null)
     {
-      return new UserImgController(imgRepository, friendRepository, configuration, friendshipRepository)
+      return new UserImgController(imgRepository, friendRepository, configuration, friendshipRepository, directory)
       {
         ControllerContext = GetControllerContext(returnClaimType)
       };

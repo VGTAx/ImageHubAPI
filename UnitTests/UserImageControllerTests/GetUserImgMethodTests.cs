@@ -17,8 +17,9 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubDirectory = new Mock<IDirectory>();
 
-      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
+      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
 
       //Act
       var result = await controller.GetUserImg(userId);
@@ -36,12 +37,13 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubDirectory = new Mock<IDirectory>();
 
       _stubImgRepository
        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
        .ReturnsAsync(false);
 
-      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
+      var controller = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
 
       //Act
       var result = await controller.GetUserImg(userId);
@@ -60,13 +62,14 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubDirectory = new Mock<IDirectory>();
 
       _stubImgRepository
        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
        .ReturnsAsync(true);
 
       var controller
-        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object);
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
 
       //Act
       var result = await controller.GetUserImg(incorrectUserId);
@@ -84,6 +87,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubDirectory = new Mock<IDirectory>();
 
       _stubImgRepository
        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
@@ -94,7 +98,7 @@ namespace UnitTests.UserImageController
         .ReturnsAsync(new List<string>());
 
       var controller
-        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, "UserID");
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
 
       //Act
       var result = await controller.GetUserImg(expectedUserId);
@@ -112,6 +116,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubDirectory = new Mock<IDirectory>();
       var images = new List<string>
       {
         "someAdressImg_1",
@@ -127,7 +132,7 @@ namespace UnitTests.UserImageController
         .ReturnsAsync(images);
 
       var controller
-        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, "UserID");
+        = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
 
       //Act
       var result = await controller.GetUserImg(expectedUserId);

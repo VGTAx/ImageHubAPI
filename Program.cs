@@ -72,6 +72,7 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserFriendRepository<User>, UserFriendRepository>();
 builder.Services.AddScoped<IUserImgRepository<User>, UserImgRepository>();
 builder.Services.AddScoped<IFriendshipRepository<Friendship>, FriendshipRepository>();
+builder.Services.AddScoped<IDirectory, DirectoryService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
