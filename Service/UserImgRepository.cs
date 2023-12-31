@@ -65,7 +65,22 @@ namespace ImageHubAPI.Service
     /// <returns></returns>
     public async Task SaveChangesAsync() =>
       await _context.SaveChangesAsync();
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="formFile"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task SaveImageAsync(IFormFile formFile, string path)
+    {
+      using (FileStream fs = new FileStream(path, FileMode.Create))
+      {
+        await formFile.CopyToAsync(fs);
+      }
+    }
+
     /// <summary>
     /// 
     /// </summary>

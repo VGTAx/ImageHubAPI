@@ -37,5 +37,13 @@
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<bool> IsImageAlreadyAddedAsync(string imgName, string userId);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="formFile"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    Task SaveImageAsync(IFormFile formFile, string path);
   }
 }

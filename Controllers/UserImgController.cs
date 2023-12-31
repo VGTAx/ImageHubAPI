@@ -96,17 +96,14 @@ namespace ImageHubAPI.Controllers
 
         foreach (var img in images)
         {
-          string fullpath = $"{uploadPath}/{img.FileName}";
-
-          using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-          {
-            await img.CopyToAsync(fs);
-          }
-
           if (!await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
           {
             return BadRequest($"Image \"{img.FileName}\" has already added");
           }
+
+          string fullpath = $"{uploadPath}/{img.FileName}";
+         
+          await _userImgRepository.SaveImageAsync(img, fullpath);
 
           var image = new Image
           {
