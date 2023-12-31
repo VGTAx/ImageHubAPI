@@ -1,4 +1,5 @@
-﻿using ImageHubAPI.DTOs;
+﻿using ImageHubAPI.CustomExceptions;
+using ImageHubAPI.DTOs;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +9,7 @@ using Moq;
 
 namespace UnitTests.UserImageController
 {
-    [TestFixture]
+  [TestFixture]
   public class UploadImgMethodTests
   {
     [Test]
@@ -231,7 +232,7 @@ namespace UnitTests.UserImageController
       _mockDirectory
         .Setup(d => d.CreateDirectory(It.IsAny<string>()))
         .Returns(() => new DirectoryInfo(It.IsAny<string>()));
-      
+
       var controller
         = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _mockDirectory.Object, "UserID");
       //Act
@@ -398,5 +399,62 @@ namespace UnitTests.UserImageController
       //Assert
       Mock.Get(_mockUser.Object).Verify(x => x.AddImages(It.IsAny<Image>()), Times.Once());
     }
+
+    [Test]
+    public async Task UploadImg_ShouldCallSaveImageAsyncOnIUserImgRepositoru_WhenImgAndPathAreProvided()
+    {
+      //Arrange
+      var _stubUploadImgDto = new UploadImgDto
+      {
+        Images = new List<IFormFile>()
+        {
+          new FormFile(Stream.Null, 0, 0, "image1", "image1.jpg"),
+        },
+        UserID = "expectedValue"
+      };
+      var _stubDirectory = new Mock<IDirectory>();
+      var _mockImgRepository = new Mock<IUserImgRepository<User>>();
+      var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
+      var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
+      var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubConfigSection = new Mock<IConfigurationSection>();
+
+      _mockImgRepository
+        .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
+        .ReturnsAsync(true);
+      _stubFriendRepostitory
+        .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
+        .ReturnsAsync(new User());
+
+      _mockImgRepository
+        .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
+        .ReturnsAsync(true);
+
+      _mockImgRepository
+        .Setup(ui => ui.SaveImageAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
+        .Returns(Task.CompletedTask);
+
+
+      _stubConfigSection
+        .Setup(cs => cs.Key)
+        .Returns("someSection");
+      _stubConfigSection
+        .Setup(cs => cs.Value)
+        .Returns("someValueSection");
+
+      _stubConfiguration
+        .Setup(x => x.GetSection(It.IsAny<string>()))
+        .Returns(_stubConfigSection.Object);
+
+      var controller
+         = TestObjectFactory.GetUserImageController(_mockImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
+
+      //Act
+      await controller.UploadImg(_stubUploadImgDto);
+
+      //Assert
+      Mock.Get(_mockImgRepository.Object)
+        .Verify(ui => ui.SaveImageAsync(It.IsAny<IFormFile>(), It.IsAny<string>()), Times.Once());
+    }    
   }
 }

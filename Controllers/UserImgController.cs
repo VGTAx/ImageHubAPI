@@ -1,4 +1,5 @@
-﻿using ImageHubAPI.DTOs;
+﻿using ImageHubAPI.CustomExceptions;
+using ImageHubAPI.DTOs;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -96,17 +97,14 @@ namespace ImageHubAPI.Controllers
 
         foreach (var img in images)
         {
-          string fullpath = $"{uploadPath}/{img.FileName}";
-
-          using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-          {
-            await img.CopyToAsync(fs);
-          }
-
           if (!await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
           {
             return BadRequest($"Image \"{img.FileName}\" has already added");
           }
+
+          string fullpath = $"{uploadPath}/{img.FileName}";
+
+          await _userImgRepository.SaveImageAsync(img, fullpath);
 
           var image = new Image
           {
@@ -124,7 +122,7 @@ namespace ImageHubAPI.Controllers
         await _userImgRepository.SaveChangesAsync();
 
         return Ok($"File(s) has(have) uploaded. Count:{uploadImgDto.Images.Count}");
-      }
+      }      
       catch (Exception)
       {
         return StatusCode(500, "Internal server error");

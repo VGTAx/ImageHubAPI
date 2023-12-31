@@ -1,4 +1,5 @@
-﻿using ImageHubAPI.Data;
+﻿using ImageHubAPI.CustomExceptions;
+using ImageHubAPI.Data;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace ImageHubAPI.Service
     /// </summary>
     private readonly ImageHubContext _context;
     private readonly IConfiguration _configuration;
+    private bool _isSuccessful;
 
     /// <summary>
     /// 
@@ -65,12 +67,41 @@ namespace ImageHubAPI.Service
     /// <returns></returns>
     public async Task SaveChangesAsync() =>
       await _context.SaveChangesAsync();
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="formFile"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task SaveImageAsync(IFormFile formFile, string path)
+    {
+      try
+      {
+        using (FileStream fs = new FileStream(path, FileMode.Create))
+        {
+          await formFile.CopyToAsync(fs);
+        }
+        _isSuccessful = true;
+      }
+      catch (Exception ex)
+      {        
+        _isSuccessful = false;
+        throw new ImageSaveException("Failed to save image.", ex.InnerException!);
+      }      
+    }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="user"></param>    
     public void UpdateUserWithImages(User user) =>
       _context.Users.Update(user);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public bool IsSuccessful => _isSuccessful;
   }
 }
