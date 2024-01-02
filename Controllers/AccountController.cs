@@ -1,12 +1,9 @@
-﻿using ImageHubAPI.Data;
-using ImageHubAPI.Interfaces;
+﻿using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Models.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
 
 namespace ImageHubAPI.Controllers
 {
@@ -26,11 +23,11 @@ namespace ImageHubAPI.Controllers
     /// <summary>
     /// AccountController constructor
     /// </summary>
-    /// <param name="context">DB context</param>
     /// <param name="userManager">User manager</param>
     /// <param name="signInManager">Sign-in manager</param>
     /// <param name="userStore">User storage</param>
     /// <param name="jwtGenerator">JWT token generator</param>
+    /// <param name="repository">Account Repository</param>
     public AccountController(
       UserManager<User> userManager,
       SignInManager<User> signInManager,
