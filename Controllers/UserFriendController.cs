@@ -67,7 +67,7 @@ namespace ImageHubAPI.Controllers
           return Forbid("There are no permissions to do the operation");
         }
 
-        if (!await _repository.IsFriendAddAsync(addFriendDto.UserId!, addFriendDto.FriendId!))
+        if (await _repository.IsFriendAddAsync(addFriendDto.UserId!, addFriendDto.FriendId!))
         {
           return BadRequest($"Friend with ID: {addFriendDto.FriendId} was already added");
         }

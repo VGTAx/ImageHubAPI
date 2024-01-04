@@ -77,7 +77,7 @@ namespace UnitTests.UserFriendControllerTests
         .ReturnsAsync(true);
       _stubRepostitory
         .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(false);
+        .ReturnsAsync(true);
 
       //Act
       var result = await controller.AddFriend(_stubAddFriendDto.Object);
@@ -103,7 +103,7 @@ namespace UnitTests.UserFriendControllerTests
       var result = await controller.AddFriend(_stubAddFriendDto.Object);
 
       //Assert
-      Assert.That(result, Is.InstanceOf<NotFoundObjectResult>()); ;
+      Assert.That(result, Is.InstanceOf<NotFoundObjectResult>()); 
 
     }
 
@@ -121,7 +121,7 @@ namespace UnitTests.UserFriendControllerTests
         .ReturnsAsync(true);
       _stubRepostitory
         .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
       _stubRepostitory
         .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
         .ReturnsAsync(_mockUser.Object);
@@ -147,7 +147,7 @@ namespace UnitTests.UserFriendControllerTests
         .ReturnsAsync(true);
       _mockRepostitory
         .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
       _mockRepostitory
         .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
         .ReturnsAsync(new User());
@@ -173,7 +173,7 @@ namespace UnitTests.UserFriendControllerTests
          .ReturnsAsync(true);
       _stubRepostitory
         .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
       _stubRepostitory
         .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
         .ReturnsAsync(new User());

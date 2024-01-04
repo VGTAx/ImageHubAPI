@@ -97,7 +97,7 @@ namespace ImageHubAPI.Controllers
 
         foreach (var img in images)
         {
-          if (!await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
+          if (await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
           {
             return BadRequest($"Image \"{img.FileName}\" has already added");
           }

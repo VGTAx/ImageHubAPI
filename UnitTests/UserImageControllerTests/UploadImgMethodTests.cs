@@ -163,7 +163,7 @@ namespace UnitTests.UserImageController
 
       _stubImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       var stubConfigSection = new Mock<IConfigurationSection>();
       stubConfigSection
@@ -213,7 +213,7 @@ namespace UnitTests.UserImageController
 
       _stubImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       var stubConfigSection = new Mock<IConfigurationSection>();
       stubConfigSection
@@ -270,7 +270,7 @@ namespace UnitTests.UserImageController
 
       _mockImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       var stubConfigSection = new Mock<IConfigurationSection>();
       stubConfigSection
@@ -326,7 +326,7 @@ namespace UnitTests.UserImageController
 
       _mockImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       var stubConfigSection = new Mock<IConfigurationSection>();
       stubConfigSection
@@ -377,7 +377,7 @@ namespace UnitTests.UserImageController
 
       _stubImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       var stubConfigSection = new Mock<IConfigurationSection>();
       stubConfigSection
@@ -428,7 +428,7 @@ namespace UnitTests.UserImageController
 
       _mockImgRepository
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
-        .ReturnsAsync(true);
+        .ReturnsAsync(false);
 
       _mockImgRepository
         .Setup(ui => ui.SaveImageAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
