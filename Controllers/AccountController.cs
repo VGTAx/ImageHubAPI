@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ImageHubAPI.Controllers
 {
   /// <summary>
-  /// Controller for managing account
+  /// Controller for managing account 123
   /// </summary>
   [ApiController]
   [Route("api/Account")]
