@@ -21,7 +21,6 @@ image: mcr.microsoft.com/dotnet/sdk:7.0
 
 before_script:
   - 'dotnet restore ./ImageHubAPI.sln'
-  - bundle exec rspec --format RspecJunitFormatter --out rspec.xml
 
 
 stages:          # List of stages for jobs, and their order of execution
