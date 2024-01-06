@@ -20,9 +20,8 @@ image: mcr.microsoft.com/dotnet/sdk:7.0
 
 
 before_script:
-  - apt-get update -qy
-  - apt-get install -y nuget
   - 'dotnet restore ./ImageHubAPI.sln'
+
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -37,11 +36,11 @@ build-job:       # This job runs in the build stage, which runs first.
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    - 'dotnet test ./UnitTests/UnitTests.csproj --logger "nunit;LogFilePath=test-results.xml" '
-    
+  - 'dotnet test --test-adapter-path:. --logger:"junit;LogFilePath=..\artifacts\{assembly}-test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"'
   artifacts:
     when: always
-    paths:
-      - test-results.xml
+    paths: 
+     - ./**/*test-result.xml
     reports:
-      junit: test-results.xml   
+      junit: 
+       - ./**/*test-result.xml  
