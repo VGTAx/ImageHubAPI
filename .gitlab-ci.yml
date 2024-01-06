@@ -20,7 +20,7 @@ image: mcr.microsoft.com/dotnet/sdk:latest
 
 
 before_script:
-  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  - 'dotnet restore ./ImageHubAPI.sln'
 
 
 stages:          # List of stages for jobs, and their order of execution
