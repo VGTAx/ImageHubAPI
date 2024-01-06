@@ -22,7 +22,6 @@ image: mcr.microsoft.com/dotnet/sdk:7.0
 before_script:
   - 'dotnet restore ./ImageHubAPI.sln'
 
-
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test  
@@ -37,7 +36,7 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - 'dotnet test ./UnitTests/UnitTests.csproj'
-    - bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
+    - 'bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml'
   artifacts:
     when: always
     paths:
