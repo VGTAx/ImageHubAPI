@@ -90,5 +90,19 @@ namespace UnitTests
         new Mock<IOptions<IdentityOptions>>().Object, new Mock<ILogger<SignInManager<User>>>().Object,
         new Mock<IAuthenticationSchemeProvider>().Object, new Mock<IUserConfirmation<User>>().Object);
     }
+
+    public static Mock<IConfigurationSection> GetConfigurationSection()
+    {
+      var stubConfigSection = new Mock<IConfigurationSection>();
+
+      stubConfigSection
+        .Setup(cs => cs.Key)
+        .Returns("someSection");
+      stubConfigSection
+        .Setup(cs => cs.Value)
+        .Returns("someValueSection");
+
+      return new Mock<IConfigurationSection>();
+    }
   }
 }

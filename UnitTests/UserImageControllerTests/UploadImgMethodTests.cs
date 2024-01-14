@@ -1,5 +1,4 @@
-﻿using ImageHubAPI.CustomExceptions;
-using ImageHubAPI.DTOs;
+﻿using ImageHubAPI.DTOs;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Http;
@@ -202,6 +201,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubConfigSection = TestObjectFactory.GetConfigurationSection();
       var _mockDirectory = new Mock<IDirectory>();
 
       _stubImgRepository
@@ -215,16 +215,9 @@ namespace UnitTests.UserImageController
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync(false);
 
-      var stubConfigSection = new Mock<IConfigurationSection>();
-      stubConfigSection
-        .Setup(cs => cs.Key)
-        .Returns("someSection");
-      stubConfigSection
-        .Setup(cs => cs.Value)
-        .Returns("someValueSection");
       _stubConfiguration
         .Setup(x => x.GetSection(It.IsAny<string>()))
-        .Returns(stubConfigSection.Object);
+        .Returns(_stubConfigSection.Object);
 
       _mockDirectory
         .Setup(d => d.Exists(It.IsAny<string>()))
@@ -259,6 +252,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubConfigSection = TestObjectFactory.GetConfigurationSection();
       var _stubDirectory = new Mock<IDirectory>();
 
       _mockImgRepository
@@ -272,16 +266,9 @@ namespace UnitTests.UserImageController
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync(false);
 
-      var stubConfigSection = new Mock<IConfigurationSection>();
-      stubConfigSection
-        .Setup(cs => cs.Key)
-        .Returns("someSection");
-      stubConfigSection
-        .Setup(cs => cs.Value)
-        .Returns("someValueSection");
       _stubConfiguration
         .Setup(x => x.GetSection(It.IsAny<string>()))
-        .Returns(stubConfigSection.Object);
+        .Returns(_stubConfigSection.Object);
 
       _stubDirectory
         .Setup(x => x.Exists(It.IsAny<string>()))
@@ -316,6 +303,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubConfigSection = TestObjectFactory.GetConfigurationSection();
 
       _mockImgRepository
         .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
@@ -328,16 +316,9 @@ namespace UnitTests.UserImageController
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync(false);
 
-      var stubConfigSection = new Mock<IConfigurationSection>();
-      stubConfigSection
-        .Setup(cs => cs.Key)
-        .Returns("someSection");
-      stubConfigSection
-        .Setup(cs => cs.Value)
-        .Returns("someValueSection");
       _stubConfiguration
         .Setup(x => x.GetSection(It.IsAny<string>()))
-        .Returns(stubConfigSection.Object);
+        .Returns(_stubConfigSection.Object);
 
       var controller
          = TestObjectFactory.GetUserImageController(_mockImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
@@ -366,6 +347,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
+      var _stubConfigSection = TestObjectFactory.GetConfigurationSection();
       var _mockUser = new Mock<User>();
 
       _stubImgRepository
@@ -379,16 +361,9 @@ namespace UnitTests.UserImageController
         .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
         .ReturnsAsync(false);
 
-      var stubConfigSection = new Mock<IConfigurationSection>();
-      stubConfigSection
-        .Setup(cs => cs.Key)
-        .Returns("someSection");
-      stubConfigSection
-        .Setup(cs => cs.Value)
-        .Returns("someValueSection");
       _stubConfiguration
         .Setup(x => x.GetSection(It.IsAny<string>()))
-        .Returns(stubConfigSection.Object);
+        .Returns(_stubConfigSection.Object);
 
       var controller
          = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
@@ -417,7 +392,7 @@ namespace UnitTests.UserImageController
       var _stubFriendRepostitory = new Mock<IUserFriendRepository<User>>();
       var _stubFriendshipRepository = new Mock<IFriendshipRepository<Friendship>>();
       var _stubConfiguration = new Mock<IConfiguration>();
-      var _stubConfigSection = new Mock<IConfigurationSection>();
+      var _stubConfigSection = TestObjectFactory.GetConfigurationSection();
 
       _mockImgRepository
         .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
@@ -434,14 +409,6 @@ namespace UnitTests.UserImageController
         .Setup(ui => ui.SaveImageAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
         .Returns(Task.CompletedTask);
 
-
-      _stubConfigSection
-        .Setup(cs => cs.Key)
-        .Returns("someSection");
-      _stubConfigSection
-        .Setup(cs => cs.Value)
-        .Returns("someValueSection");
-
       _stubConfiguration
         .Setup(x => x.GetSection(It.IsAny<string>()))
         .Returns(_stubConfigSection.Object);
@@ -455,6 +422,6 @@ namespace UnitTests.UserImageController
       //Assert
       Mock.Get(_mockImgRepository.Object)
         .Verify(ui => ui.SaveImageAsync(It.IsAny<IFormFile>(), It.IsAny<string>()), Times.Once());
-    }    
+    }
   }
 }
