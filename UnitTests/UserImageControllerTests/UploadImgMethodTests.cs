@@ -224,7 +224,7 @@ namespace UnitTests.UserImageController
         .Returns(false);
       _mockDirectory
         .Setup(d => d.CreateDirectory(It.IsAny<string>()))
-        .Returns(() => new DirectoryInfo(It.IsAny<string>()));
+        .Returns(new DirectoryInfo("some_path"));
 
       var controller
         = TestObjectFactory.GetUserImageController(_stubImgRepository.Object, _stubFriendRepostitory.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _mockDirectory.Object, "UserID");
