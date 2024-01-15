@@ -1,5 +1,4 @@
-﻿using ImageHubAPI.CustomExceptions;
-using ImageHubAPI.DTOs;
+﻿using ImageHubAPI.DTOs;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -63,71 +62,63 @@ namespace ImageHubAPI.Controllers
     [HttpPost(template: nameof(UploadImg), Name = nameof(UploadImg))]
     public async Task<IActionResult> UploadImg([FromForm] UploadImgDto uploadImgDto)
     {
-      try
+      if (!ModelState.IsValid)
       {
-        if (!ModelState.IsValid)
-        {
-          return BadRequest();
-        }
-
-        if (!await _userImgRepository.IsUserExistAsync(uploadImgDto.UserID!))
-        {
-          return NotFound($"User with ID:{uploadImgDto.UserID} not exist");
-        }
-
-        if (!IsUserIdValid(uploadImgDto.UserID!))
-        {
-          return Forbid("There are no permissions to do the operation");
-        }
-
-        if (uploadImgDto.Images is null || uploadImgDto.Images.Count == 0)
-        {
-          return BadRequest("No images to download");
-        }
-
-        var user = await _userFriendRepository.GetUserByIdAsync(uploadImgDto.UserID!);
-
-        var images = uploadImgDto.Images;
-        var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
-
-        if (!_directory.Exists(uploadPath))
-        {
-          _directory.CreateDirectory(uploadPath);
-        }
-
-        foreach (var img in images)
-        {
-          if (await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
-          {
-            return BadRequest($"Image \"{img.FileName}\" has already added");
-          }
-
-          string fullpath = $"{uploadPath}/{img.FileName}";
-
-          await _userImgRepository.SaveImageAsync(img, fullpath);
-
-          var image = new Image
-          {
-            ImageId = Guid.NewGuid().ToString(),
-            Title = img.FileName,
-            Path = $"/{uploadImgDto.UserID}/{img.FileName}",
-            UserId = uploadImgDto.UserID
-          };
-
-          user!.AddImages(image);
-
-          _userImgRepository.UpdateUserWithImages(user);
-        }
-
-        await _userImgRepository.SaveChangesAsync();
-
-        return Ok($"File(s) has(have) uploaded. Count:{uploadImgDto.Images.Count}");
-      }      
-      catch (Exception)
-      {
-        return StatusCode(500, "Internal server error");
+        return BadRequest();
       }
 
+      if (!await _userImgRepository.IsUserExistAsync(uploadImgDto.UserID!))
+      {
+        return NotFound($"User with ID:{uploadImgDto.UserID} not exist");
+      }
+
+      if (!IsUserIdValid(uploadImgDto.UserID!))
+      {
+        return Forbid("There are no permissions to do the operation");
+      }
+
+      if (uploadImgDto.Images is null || uploadImgDto.Images.Count == 0)
+      {
+        return BadRequest("No images to download");
+      }
+
+      var user = await _userFriendRepository.GetUserByIdAsync(uploadImgDto.UserID!);
+
+      var images = uploadImgDto.Images;
+      var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
+
+      if (!_directory.Exists(uploadPath))
+      {
+        _directory.CreateDirectory(uploadPath);
+      }
+
+      foreach (var img in images)
+      {
+        if (await _userImgRepository.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
+        {
+          return BadRequest($"Image \"{img.FileName}\" has already added");
+        }
+
+        string fullpath = $"{uploadPath}/{img.FileName}";
+
+        await _userImgRepository.SaveImageAsync(img, fullpath);
+
+        var image = new Image
+        {
+          ImageId = Guid.NewGuid().ToString(),
+          Title = img.FileName,
+          Path = $"/{uploadImgDto.UserID}/{img.FileName}",
+          UserId = uploadImgDto.UserID
+        };
+
+        user!.AddImages(image);
+
+        _userImgRepository.UpdateUserWithImages(user);
+      }
+
+      await _userImgRepository.SaveChangesAsync();
+
+      return Ok($"File(s) has(have) uploaded. Count:{uploadImgDto.Images.Count}");
     }
 
     /// <summary>
@@ -149,36 +140,29 @@ namespace ImageHubAPI.Controllers
     [HttpGet(template: nameof(GetUserImg), Name = nameof(GetUserImg))]
     public async Task<IActionResult> GetUserImg([FromQuery] string userId)
     {
-      try
+      if (string.IsNullOrEmpty(userId))
       {
-        if (string.IsNullOrEmpty(userId))
-        {
-          return BadRequest("UserId is required!");
-        }
-
-        if (!await _userImgRepository.IsUserExistAsync(userId!))
-        {
-          return NotFound($"User with ID:{userId} not exist");
-        }
-
-        if (!IsUserIdValid(userId))
-        {
-          return Forbid("There are no permissions to do the operation");
-        }
-
-        var images = await _userImgRepository.GetImgByUserIdAsync(userId);
-
-        if (!images.Any())
-        {
-          return NotFound("User doesn't have images");
-        }
-
-        return Ok(new { Images = images, Message = "Images received" });
+        return BadRequest("UserId is required!");
       }
-      catch (Exception)
+
+      if (!await _userImgRepository.IsUserExistAsync(userId!))
       {
-        return StatusCode(500, "Internal server error");
+        return NotFound($"User with ID:{userId} not exist");
       }
+
+      if (!IsUserIdValid(userId))
+      {
+        return Forbid("There are no permissions to do the operation");
+      }
+
+      var images = await _userImgRepository.GetImgByUserIdAsync(userId);
+
+      if (!images.Any())
+      {
+        return NotFound("User doesn't have images");
+      }
+
+      return Ok(new { Images = images, Message = "Images received" });
     }
 
     /// <summary>
@@ -200,39 +184,32 @@ namespace ImageHubAPI.Controllers
     [HttpGet(template: nameof(GetFriendImg), Name = nameof(GetFriendImg))]
     public async Task<IActionResult> GetFriendImg([FromQuery] string friendId)
     {
-      try
+      if (string.IsNullOrEmpty(friendId))
       {
-        if (string.IsNullOrEmpty(friendId))
-        {
-          return BadRequest($"Friend ID is required");
-        }
-
-        if (!await _userImgRepository.IsUserExistAsync(friendId))
-        {
-          return NotFound($"User with ID: {friendId} not exist");
-        }
-        var userId = User?.FindFirst("UserID")?.Value;
-
-        var availableFriendImg = await _friendshipRepository.GetFriendshipAsync(userId!, friendId);
-
-        if (availableFriendImg == null || !IsUserIdValid(userId!))
-        {
-          return Forbid("There are no permissions to do the operation");
-        }
-
-        var images = await _userImgRepository.GetImgByUserIdAsync(friendId);
-
-        if (!images.Any())
-        {
-          return NotFound($"User with ID: {friendId} doesn't have images");
-        }
-
-        return Ok(images);
+        return BadRequest($"Friend ID is required");
       }
-      catch
+
+      if (!await _userImgRepository.IsUserExistAsync(friendId))
       {
-        return StatusCode(500, "Internal server error");
+        return NotFound($"User with ID: {friendId} not exist");
       }
+      var userId = User?.FindFirst("UserID")?.Value;
+
+      var availableFriendImg = await _friendshipRepository.GetFriendshipAsync(userId!, friendId);
+
+      if (availableFriendImg == null || !IsUserIdValid(userId!))
+      {
+        return Forbid("There are no permissions to do the operation");
+      }
+
+      var images = await _userImgRepository.GetImgByUserIdAsync(friendId);
+
+      if (!images.Any())
+      {
+        return NotFound($"User with ID: {friendId} doesn't have images");
+      }
+
+      return Ok(images);
     }
 
     /// <summary>

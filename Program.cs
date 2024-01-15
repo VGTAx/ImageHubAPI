@@ -1,6 +1,7 @@
 using ImageHubAPI.Data;
 using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
+using ImageHubAPI.Midllewars;
 using ImageHubAPI.Models;
 using ImageHubAPI.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -108,6 +109,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+
+app.UseCustomExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

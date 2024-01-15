@@ -102,7 +102,7 @@ namespace UnitTests
         .Setup(cs => cs.Value)
         .Returns("someValueSection");
 
-      return new Mock<IConfigurationSection>();
+      return stubConfigSection;
     }
   }
 }
