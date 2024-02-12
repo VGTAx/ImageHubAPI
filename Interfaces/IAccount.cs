@@ -3,7 +3,7 @@
   /// <summary>
   /// 
   /// </summary>
-  public interface IAccountRepository
+  public interface IAccount
   {
     /// <summary>
     /// Checks the availability of an email

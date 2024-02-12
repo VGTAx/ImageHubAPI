@@ -1,8 +1,10 @@
-﻿using ImageHubAPI.Models;
+﻿using ImageHubAPI.Data.EntityTypeConfigurations;
+using ImageHubAPI.Interfaces;
+using ImageHubAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ImageHubAPI.Data
 {
@@ -16,22 +18,27 @@ namespace ImageHubAPI.Data
         /// </summary>
         /// <param name="options"></param>
         public ImageHubContext(DbContextOptions<ImageHubContext> options) : base(options) { }
+
         /// <summary>
         /// 
         /// </summary>
         public ImageHubContext() { }
+
         /// <summary>
         /// 
         /// </summary>
-        public virtual DbSet<Image> Images { get; set; }
+        public DbSet<Image> Images { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
-        public virtual DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
-        public virtual DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -46,121 +53,27 @@ namespace ImageHubAPI.Data
               .HasKey(d => new { d.UserId, d.LoginProvider, d.Name });
             builder.Entity<IdentityUserLogin<string>>()
               .HasKey(d => new { d.LoginProvider, d.ProviderKey });
-        }        
-
-        /// <summary>
-        /// Configure User Entity
-        /// </summary>
-        private sealed class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
-        {
-            public void Configure(EntityTypeBuilder<User> builder)
-            {
-                builder.HasMany(u => u.UserImages)
-                  .WithOne(i => i.User)
-                  .HasForeignKey(i => i.UserId);
-
-                builder.Metadata
-                  .FindNavigation(nameof(User.UserImages))!
-                  .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-                builder.Metadata
-                  .FindNavigation(nameof(User.Friendships))!
-                  .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-                builder
-                  .HasData(
-                    new User
-                    {
-                        Id = "55d8220f-2967-4342-8f6c-e6294a3e52c2",
-                        Name = "Username_1",
-                        Email = "username_1@example.com",
-                        UserName = "username_1@example.com",
-                        NormalizedEmail = "USERNAME_1@EXAMPLE.COM",
-                        NormalizedUserName = "USERNAME_1@EXAMPLE.COM",
-                        ConcurrencyStamp = Guid.NewGuid().ToString(),
-                        SecurityStamp = Guid.NewGuid().ToString(),
-                        LockoutEnabled = true,
-                        PasswordHash = new PasswordHasher<User>().HashPassword(null!, "passworD1!")
-                    },
-                    new User
-                    {
-                        Id = "23ad2a4f-c1f0-4abc-94c0-52854af2039e",
-                        Name = "Username_2",
-                        Email = "username_2@example.com",
-                        UserName = "username_2@example.com",
-                        NormalizedEmail = "USERNAME_2@EXAMPLE.COM",
-                        NormalizedUserName = "USERNAME_2@EXAMPLE.COM",
-                        ConcurrencyStamp = Guid.NewGuid().ToString(),
-                        SecurityStamp = Guid.NewGuid().ToString(),
-                        LockoutEnabled = true,
-                        PasswordHash = new PasswordHasher<User>().HashPassword(null!, "passworD1!")
-                    }
-                  );
-            }
         }
 
         /// <summary>
-        /// Configure Friendship Entity
+        /// 
         /// </summary>
-        private sealed class FriendshipEntityTypeConfiguration : IEntityTypeConfiguration<Friendship>
+        /// <returns></returns>
+        public async Task<int> SaveChangesAsync()
         {
-            public void Configure(EntityTypeBuilder<Friendship> builder)
-            {
-                builder
-                  .HasOne(f => f.FirstUser)
-                  .WithMany()
-                  .HasForeignKey(f => f.UserSenderId);
-
-                builder
-                  .HasOne(f => f.SecondUser)
-                  .WithMany()
-                  .HasForeignKey(f => f.FriendId);
-            }
+            return await base.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Configure Image Entity
+        /// 
         /// </summary>
-        private sealed class ImageEntityTypeConfiguration : IEntityTypeConfiguration<Image>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public new EntityEntry Update<TEntity>(TEntity entity)
         {
-            public void Configure(EntityTypeBuilder<Image> builder)
-            {
-                builder
-                  .HasIndex(i => i.Path)
-                  .IsUnique();
-
-                builder
-                  .HasData(
-                    new Image
-                    {
-                        ImageId = Guid.NewGuid().ToString(),
-                        Title = "github.png",
-                        Path = "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/github.png",
-                        UserId = "23ad2a4f-c1f0-4abc-94c0-52854af2039e"
-                    },
-                    new Image
-                    {
-                        ImageId = Guid.NewGuid().ToString(),
-                        Title = "logo.jpg",
-                        Path = "/23ad2a4f-c1f0-4abc-94c0-52854af2039e/logo.jpg",
-                        UserId = "23ad2a4f-c1f0-4abc-94c0-52854af2039e"
-                    },
-                    new Image
-                    {
-                        ImageId = Guid.NewGuid().ToString(),
-                        Title = "PngItem_6631012.png",
-                        Path = "/55d8220f-2967-4342-8f6c-e6294a3e52c2/PngItem_6631012.png",
-                        UserId = "55d8220f-2967-4342-8f6c-e6294a3e52c2"
-                    },
-                    new Image
-                    {
-                        ImageId = Guid.NewGuid().ToString(),
-                        Title = "man-search-for-hiring-job-online-from-laptop_1150-52728.jpg",
-                        Path = "/55d8220f-2967-4342-8f6c-e6294a3e52c2/man-search-for-hiring-job-online-from-laptop_1150-52728.jpg",
-                        UserId = "55d8220f-2967-4342-8f6c-e6294a3e52c2"
-                    }
-                  );
-            }
+            return base.Update(entity);
         }
     }
 }

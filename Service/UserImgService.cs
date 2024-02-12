@@ -1,0 +1,99 @@
+﻿using ImageHubAPI.CustomExceptions;
+using ImageHubAPI.Data;
+using ImageHubAPI.Interfaces;
+using ImageHubAPI.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace ImageHubAPI.Service
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class UserImgService : IUserImg<User>
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly IImageHubContext _context;
+        private readonly IConfiguration _configuration;
+        private bool _isSuccessful;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="configuration"></param>
+        public UserImgService(ImageHubContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _configuration = configuration;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<string>> GetImgByUserIdAsync(string userId)
+        {
+            var images = await _context.Images
+                .Where(i => i.UserId == userId)
+                .Select(i => _configuration.GetSection("PathImgHub").Value + i.Path)
+                .ToListAsync();
+
+            return images;
+        }
+
+        /// <summary>
+        /// Checks an image has been added or not
+        /// </summary>
+        /// <param name="imgName">Image name</param>
+        /// <param name="userId">User ID</param>
+        /// <returns>Returns the result of checking an image has been added or not. True if image has been added, else false</returns>
+        public async Task<bool> IsImageAlreadyAddedAsync(string imgName, string userId) =>
+            await _context.Images.AnyAsync(i => i.Title == imgName && i.UserId == userId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveChangesAsync() =>
+          await _context.SaveChangesAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="formFile"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task SaveImageAsync(IFormFile formFile, string path)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Create))
+                {
+                    await formFile.CopyToAsync(fs);
+                }
+                _isSuccessful = true;
+            }
+            catch (Exception ex)
+            {
+                _isSuccessful = false;
+                throw new ImageSaveException("Failed to save image.", ex.InnerException!);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>    
+        public void UpdateUserWithImages(User user) =>
+          _context.Users.Update(user);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsSuccessful => _isSuccessful;
+    }
+}

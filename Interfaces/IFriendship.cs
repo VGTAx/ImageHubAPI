@@ -3,7 +3,7 @@
   /// <summary>
   /// 
   /// </summary>
-  public interface IFriendshipRepository<T> where T : class
+  public interface IFriendship<T> where T : class
   {
     /// <summary>
     /// 
