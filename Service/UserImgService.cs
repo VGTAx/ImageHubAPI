@@ -56,26 +56,36 @@ namespace ImageHubAPI.Service
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public async Task SaveChangesAsync() =>
-          await _context.SaveChangesAsync();
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="formFile"></param>
         /// <param name="path"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task SaveImageAsync(IFormFile formFile, string path)
+        public async Task SaveImageAsync(List<IFormFile> formFile, string path, User user)
         {
             try
             {
-                using (FileStream fs = new FileStream(path, FileMode.Create))
+                foreach (var image in formFile)
                 {
-                    await formFile.CopyToAsync(fs);
+                    string fullpath = $"{path}/{image.FileName}";
+                    using (FileStream fs = new FileStream(fullpath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fs);
+                    }
+                    _isSuccessful = true;
+
+                    var img = new Image
+                    {
+                        ImageId = Guid.NewGuid().ToString(),
+                        Title = image.FileName,
+                        Path = $"/{user.Id}/{image.FileName}",
+                        UserId = user.Id
+                    };
+
+                    user!.AddImages(img);
                 }
-                _isSuccessful = true;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -85,11 +95,15 @@ namespace ImageHubAPI.Service
         }
 
         /// <summary>
-        /// 
+        /// Return upload path for user
         /// </summary>
-        /// <param name="user"></param>    
-        public void UpdateUserWithImages(User user) =>
-          _context.Users.Update(user);
+        /// <param name="userId">user id </param>
+        /// <returns>Path or <see cref="null"/></returns>
+        public string? GetUploadPath(string userId)
+        {
+            var path = $"{_configuration.GetSection("PathImgHub").Value}";
+            return String.IsNullOrEmpty(path) ? null : $"{path}/{userId}";
+        }
 
         /// <summary>
         /// 

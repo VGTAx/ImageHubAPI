@@ -14,18 +14,6 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="user"></param>
-        void UpdateUserWithImages(T user);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Task SaveChangesAsync();
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="imgName"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -36,7 +24,15 @@
         /// </summary>
         /// <param name="formFile"></param>
         /// <param name="path"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        Task SaveImageAsync(IFormFile formFile, string path);
+        Task SaveImageAsync(List<IFormFile> formFile, string path, T user);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        string? GetUploadPath(string userId);
     }
 }

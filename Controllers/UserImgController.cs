@@ -51,6 +51,7 @@ namespace ImageHubAPI.Controllers
         ///     <li>No images to download</li>
         ///     <li>The request contains invalid data or invalid parameters</li>
         ///     <li>Image has already added</li>
+        ///     <li>Upload path isn't gotten</li>
         ///   </ul>
         /// </response>
         /// <response code="401">User is not authorized</response>
@@ -83,42 +84,27 @@ namespace ImageHubAPI.Controllers
             }
 
             var user = await _userService.GetUserByIdAsync(uploadImgDto.UserID!);
-
-            var images = uploadImgDto.Images;
-            var uploadPath = $"{_configuration.GetSection("PathImgHub").Value}/{uploadImgDto.UserID}";
+            var uploadPath = _userImgService.GetUploadPath(uploadImgDto.UserID!);
+            if (String.IsNullOrEmpty(uploadPath))
+            {
+                return BadRequest("Upload path isn't gotten. Check config file");
+            }
 
             if (!_directory.Exists(uploadPath))
             {
                 _directory.CreateDirectory(uploadPath);
             }
 
-            foreach (var img in images)
+            foreach (var img in uploadImgDto.Images)
             {
                 if (await _userImgService.IsImageAlreadyAddedAsync(img.FileName, user!.Id))
                 {
                     return BadRequest($"Image \"{img.FileName}\" has already added");
                 }
-
-                string fullpath = $"{uploadPath}/{img.FileName}";
-
-                await _userImgService.SaveImageAsync(img, fullpath);
-
-                var image = new Image
-                {
-                    ImageId = Guid.NewGuid().ToString(),
-                    Title = img.FileName,
-                    Path = $"/{uploadImgDto.UserID}/{img.FileName}",
-                    UserId = uploadImgDto.UserID
-                };
-
-                user!.AddImages(image);
-
-                _userImgService.UpdateUserWithImages(user);
             }
+            await _userImgService.SaveImageAsync(uploadImgDto.Images, uploadPath, user);
 
-            await _userImgService.SaveChangesAsync();
-
-            return Ok($"File(s) has(have) uploaded. Count:{uploadImgDto.Images.Count}");
+            return Ok($"File(s) has(have) uploaded.");
         }
 
         /// <summary>
