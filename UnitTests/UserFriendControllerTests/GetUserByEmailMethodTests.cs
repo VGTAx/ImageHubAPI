@@ -13,9 +13,9 @@ namespace UnitTests.UserFriendControllerTests
         {
             //Arrange
             var email = string.Empty;
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
             //Act
             var result = await controller.GetUserByEmail(email);
@@ -28,12 +28,12 @@ namespace UnitTests.UserFriendControllerTests
         public async Task GetUserByEmail_UserNotFound_ReturnNotFound()
         {
             //Arrange
-            var email = "email@mail.com";
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
-
-            _stubUserService
+            const string email = "email@mail.com";
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var stubUserService = new Mock<IUser<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
+    
+            stubUserService
               .Setup(r => r.GetUserByEmailAsync(It.IsAny<string>()))!
               .ReturnsAsync(null as User);
 
@@ -48,12 +48,12 @@ namespace UnitTests.UserFriendControllerTests
         public async Task GetUserByEmail_UserReceived_ReturnOk()
         {
             //Arrange
-            var email = "email@mail.com";
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            const string email = "email@mail.com";
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.GetUserByEmailAsync(It.IsAny<string>()))!
               .ReturnsAsync(new User());
 

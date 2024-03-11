@@ -13,15 +13,15 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_ModelIsNotValid_ReturnBadRequest()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
             controller.ModelState.AddModelError("someError", "someError");
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<BadRequestResult>());
@@ -31,17 +31,17 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_UserIsNotExist_ReturnNotFound()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(false);
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -51,18 +51,18 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_UserIdIsNotValid_ReturnForbid()
         {
             //Assert
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
             var controller = 
-                TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, "UserID");
+                TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, "UserID");
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Arrange
             Assert.That(result, Is.InstanceOf<ForbidResult>());
@@ -72,20 +72,20 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_FriendHasAlreadyAdded_ReturnBadRequest()
         {
             //Assert
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserFriend
+            stubUserFriend
               .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(true);
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Arrange
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -96,17 +96,17 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_UserRequesterNotFound_ReturnNotFound()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
               .ReturnsAsync(null as User);
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -117,77 +117,77 @@ namespace UnitTests.UserFriendControllerTests
         public async Task AddFriend_ShouldCallAddFriendshipOnUser_WhenFriendIsProvided()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var _mockUser = new Mock<User>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var mockUser = new Mock<User>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
-              .ReturnsAsync(_mockUser.Object);
-            _stubUserFriend
+              .ReturnsAsync(mockUser.Object);
+            stubUserFriend
               .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
 
             //Act
-            await controller.AddFriend(_stubAddFriendDto.Object);
+            await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
             
-            Mock.Get(_mockUser.Object).Verify(u => u.AddFriendship(It.IsAny<Friendship>()));
+            Mock.Get(mockUser.Object).Verify(u => u.AddFriendship(It.IsAny<Friendship>()));
         }
 
         [Test]
         public async Task AddFriend_ShouldCallAddFriendOnIUserFriendRepository_WhenFriendIsProvided()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _mockRepostitory = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _mockRepostitory.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var mockRepostitory = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, mockRepostitory.Object, null);
 
-            _stubUserService
+            stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
               .ReturnsAsync(new User());
-            _mockRepostitory
+            mockRepostitory
               .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
 
             //Act
-            await controller.AddFriend(_stubAddFriendDto.Object);
+            await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
-            Mock.Get(_mockRepostitory.Object).Verify(u => u.AddFriendAsync(It.IsAny<User>()));
+            Mock.Get(mockRepostitory.Object).Verify(u => u.AddFriendAsync(It.IsAny<User>()));
         }
 
         [Test]
         public async Task AddFriend_FriendWasAdded_ReturnOk()
         {
             //Arrange
-            var _stubAddFriendDto = new Mock<AddFriendDto>();
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, null);
+            var stubAddFriendDto = new Mock<AddFriendDto>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserFriend = new Mock<IUserFriend<User>>();
+            var controller = TestObjectFactory.GetUserFriendController(stubUserService.Object, stubUserFriend.Object, null);
 
-            _stubUserService
+            stubUserService
                .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
                .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(r => r.GetUserByIdAsync(It.IsAny<string>()))!
               .ReturnsAsync(new User());
-            _stubUserFriend
+            stubUserFriend
               .Setup(r => r.IsFriendAddAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
 
             //Act
-            var result = await controller.AddFriend(_stubAddFriendDto.Object);
+            var result = await controller.AddFriend(stubAddFriendDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<OkObjectResult>());

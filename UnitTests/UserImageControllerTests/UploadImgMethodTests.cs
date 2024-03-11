@@ -15,18 +15,18 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_ModelIsNotValid_ReturnBadRequest()
         {
             //Arrange
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUploadImgDto = new Mock<UploadImgDto>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
-            var controller = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUploadImgDto = new Mock<UploadImgDto>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
+            var controller = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object);
 
             controller.ModelState.AddModelError("someKey", "someMessage");
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto.Object);
+            var result = await controller.UploadImg(stubUploadImgDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<BadRequestResult>());
@@ -36,21 +36,21 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_UserIsNotExist_ReturnNotFound()
         {
             //Arrange
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUploadImgDto = new Mock<UploadImgDto>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUploadImgDto = new Mock<UploadImgDto>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(us => us.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(false);
 
-            var controller = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
+            var controller = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object);
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto.Object);
+            var result = await controller.UploadImg(stubUploadImgDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -60,22 +60,22 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_UserIdIsNotValid_ReturnForbid()
         {
             //Arrange
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUploadImgDto = new Mock<UploadImgDto>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUploadImgDto = new Mock<UploadImgDto>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(us => us.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "NotValidId");
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object, "NotValidId");
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto.Object);
+            var result = await controller.UploadImg(stubUploadImgDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<ForbidResult>());
@@ -85,25 +85,25 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_ImageIsAlreadyAdded_ReturnBadRequest()
         {
             //Arrange
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUploadImgDto = new Mock<UploadImgDto>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUploadImgDto = new Mock<UploadImgDto>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserImages
+            stubUserImages
               .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object);
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto.Object);
+            var result = await controller.UploadImg(stubUploadImgDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -113,22 +113,22 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_NoImagesToUpload_ReturnBadRequest()
         {
             //Arrange
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUploadImgDto = new Mock<UploadImgDto>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUploadImgDto = new Mock<UploadImgDto>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(us => us.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object);
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object);
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto.Object);
+            var result = await controller.UploadImg(stubUploadImgDto.Object);
 
             //Assert
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -137,7 +137,7 @@ namespace UnitTests.UserImageController
         [Test]
         public async Task UploadImg_UploadPathIsNullOrEmpty_ReturnBadRequest()
         {
-            var _stubUploadImgDto = new UploadImgDto
+            var stubUploadImgDto = new UploadImgDto
             {
                 Images = new List<IFormFile>()
                 {
@@ -145,31 +145,31 @@ namespace UnitTests.UserImageController
                 },
                 UserID = "expectedValue"
             };
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(us => us.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(us => us.GetUserByIdAsync(It.IsAny<string>()))
               .ReturnsAsync(new User());
 
-            _stubUserImages
+            stubUserImages
               .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
-            _stubUserImages
+            stubUserImages
                 .Setup(ui => ui.GetUploadPath(It.IsAny<string>()))
                 .Returns("");
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object, "UserID");
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto);
+            var result = await controller.UploadImg(stubUploadImgDto);
 
             //Assert
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -179,7 +179,7 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_ImageIsUploaded_ReturnOk()
         {
             //Arrange
-            var _stubUploadImgDto = new UploadImgDto
+            var stubUploadImgDto = new UploadImgDto
             {
                 Images = new List<IFormFile>()
                 {
@@ -187,31 +187,31 @@ namespace UnitTests.UserImageController
                 },
                 UserID = "expectedValue"
             };
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _stubDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var stubDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
               .ReturnsAsync(new User());
 
-            _stubUserImages
+            stubUserImages
               .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
-            _stubUserImages
+            stubUserImages
                 .Setup(ui => ui.GetUploadPath(It.IsAny<string>()))
                 .Returns("somePath");
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object, "UserID");
 
             //Act
-            var result = await controller.UploadImg(_stubUploadImgDto);
+            var result = await controller.UploadImg(stubUploadImgDto);
 
             //Assert
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -221,7 +221,7 @@ namespace UnitTests.UserImageController
         public async Task UploadImg_ShouldCallCreateDirectoryOnDirectory_WhenDirectoryIsNotExist()
         {
             //Assert
-            var _stubUploadImgDto = new UploadImgDto
+            var stubUploadImgDto = new UploadImgDto
             {
                 Images = new List<IFormFile>()
                 {
@@ -229,47 +229,47 @@ namespace UnitTests.UserImageController
                 },
                 UserID = "expectedValue"
             };
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
-            var _mockDirectory = new Mock<IDirectory>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
+            var mockDirectory = new Mock<IDirectory>();
 
-            _stubUserService
+            stubUserService
               .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
               .ReturnsAsync(new User());
 
-            _stubUserImages
+            stubUserImages
               .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
-            _stubUserImages
+            stubUserImages
                 .Setup(ui => ui.GetUploadPath(It.IsAny<string>()))
                 .Returns("somePath");
 
-            _mockDirectory
+            mockDirectory
               .Setup(d => d.Exists(It.IsAny<string>()))
               .Returns(false);
-            _mockDirectory
+            mockDirectory
               .Setup(d => d.CreateDirectory(It.IsAny<string>()))
               .Returns(new DirectoryInfo("some_path"));
 
             var controller
-              = TestObjectFactory.GetUserImageController(_stubUserService.Object, _stubUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _mockDirectory.Object, "UserID");
+              = TestObjectFactory.GetUserImageController(stubUserService.Object, stubUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, mockDirectory.Object, "UserID");
             //Act
-            await controller.UploadImg(_stubUploadImgDto);
+            await controller.UploadImg(stubUploadImgDto);
 
             //Assert
-            Mock.Get(_mockDirectory.Object).Verify(d => d.CreateDirectory(It.IsAny<string>()), Times.Once());
+            Mock.Get(mockDirectory.Object).Verify(d => d.CreateDirectory(It.IsAny<string>()), Times.Once());
         }
 
         [Test]
         public async Task UploadImg_ShouldCallSaveImagesAsyncOnIUserImg_WhenImgsAndPathAreProvided()
         {
             //Arrange
-            var _stubUploadImgDto = new UploadImgDto
+            var stubUploadImgDto = new UploadImgDto
             {
                 Images = new List<IFormFile>()
                 {
@@ -277,34 +277,34 @@ namespace UnitTests.UserImageController
                 },
                 UserID = "expectedValue"
             };
-            var _stubUserService = new Mock<IUser<User>>();
-            var _stubDirectory = new Mock<IDirectory>();
-            var _mockUserImages = new Mock<IUserImg<User>>();
-            var _stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
-            var _stubConfiguration = new Mock<IConfiguration>();
+            var stubUserService = new Mock<IUser<User>>();
+            var stubDirectory = new Mock<IDirectory>();
+            var mockUserImages = new Mock<IUserImg<User>>();
+            var stubFriendshipRepository = new Mock<IFriendship<Friendship>>();
+            var stubConfiguration = new Mock<IConfiguration>();
 
-            _stubUserService
+            stubUserService
               .Setup(ui => ui.IsUserExistAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
-            _stubUserService
+            stubUserService
               .Setup(ur => ur.GetUserByIdAsync(It.IsAny<string>()))
               .ReturnsAsync(new User());
 
-            _mockUserImages
+            mockUserImages
               .Setup(ui => ui.IsImageAlreadyAddedAsync(It.IsAny<string>(), It.IsAny<string>()))
               .ReturnsAsync(false);
-            _mockUserImages
+            mockUserImages
                 .Setup(ui => ui.GetUploadPath(It.IsAny<string>()))
                 .Returns("somePath");
 
             var controller
-               = TestObjectFactory.GetUserImageController(_stubUserService.Object, _mockUserImages.Object, _stubConfiguration.Object, _stubFriendshipRepository.Object, _stubDirectory.Object, "UserID");
+               = TestObjectFactory.GetUserImageController(stubUserService.Object, mockUserImages.Object, stubConfiguration.Object, stubFriendshipRepository.Object, stubDirectory.Object, "UserID");
 
             //Act
-            await controller.UploadImg(_stubUploadImgDto);
+            await controller.UploadImg(stubUploadImgDto);
 
             //Assert
-            Mock.Get(_mockUserImages.Object)
+            Mock.Get(mockUserImages.Object)
               .Verify(ui => ui.SaveImageAsync(It.IsAny<List<IFormFile>>(), It.IsAny<string>(), It.IsAny<User>()), Times.Once());
         }
     }
