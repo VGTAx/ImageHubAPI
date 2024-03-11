@@ -11,7 +11,7 @@
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        Task AddFriend(T user);
+        Task AddFriendAsync(T user);
 
         /// <summary>
         /// 

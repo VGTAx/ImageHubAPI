@@ -30,7 +30,7 @@ namespace ImageHubAPI.Service
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task AddFriend(User user)
+        public async Task AddFriendAsync(User user)
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

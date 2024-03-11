@@ -66,7 +66,7 @@ namespace ImageHubAPI.Controllers
                     return BadRequest();
                 }
 
-                if (await _accountService.IsEmailAvailable(registration.Name!))
+                if (await _accountService.IsEmailAvailableAsync(registration.Name!))
                 {
                     return BadRequest($"Email \"{registration.Email}\" has already taken");
                 }

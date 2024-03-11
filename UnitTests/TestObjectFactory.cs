@@ -71,7 +71,7 @@ namespace UnitTests
           IDirectory directory,
           string? returnClaimType = null)
         {
-            return new UserImgController(userService, userImg, configuration, friendshipRepository, directory)
+            return new UserImgController(userService, userImg, friendshipRepository, directory)
             {
                 ControllerContext = GetControllerContext(returnClaimType)
             };

@@ -54,7 +54,8 @@ namespace UnitTests.UserFriendControllerTests
             var _stubAddFriendDto = new Mock<AddFriendDto>();
             var _stubUserService = new Mock<IUser<User>>();
             var _stubUserFriend = new Mock<IUserFriend<User>>();
-            var controller = TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, "UserID");
+            var controller = 
+                TestObjectFactory.GetUserFriendController(_stubUserService.Object, _stubUserFriend.Object, "UserID");
 
             _stubUserService
               .Setup(r => r.IsUserExistAsync(It.IsAny<string>()))
@@ -136,7 +137,7 @@ namespace UnitTests.UserFriendControllerTests
             await controller.AddFriend(_stubAddFriendDto.Object);
 
             //Assert
-
+            
             Mock.Get(_mockUser.Object).Verify(u => u.AddFriendship(It.IsAny<Friendship>()));
         }
 
@@ -163,7 +164,7 @@ namespace UnitTests.UserFriendControllerTests
             await controller.AddFriend(_stubAddFriendDto.Object);
 
             //Assert
-            Mock.Get(_mockRepostitory.Object).Verify(u => u.AddFriend(It.IsAny<User>()));
+            Mock.Get(_mockRepostitory.Object).Verify(u => u.AddFriendAsync(It.IsAny<User>()));
         }
 
         [Test]

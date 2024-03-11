@@ -3,7 +3,10 @@ using ImageHubAPI.Interfaces;
 using ImageHubAPI.IService;
 using ImageHubAPI.Models;
 using ImageHubAPI.Service;
+using ImageHubAPI.Service.AuthorizationHandleRequirements;
+using ImageHubAPI.Service.AuthorizationRequirements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -74,6 +77,7 @@ builder.Services.AddScoped<IUserImg<User>, UserImgService>();
 builder.Services.AddScoped<IFriendship<Friendship>, FriendshipService>();
 builder.Services.AddScoped<IUser<User>, UserService>();
 builder.Services.AddScoped<IDirectory, DirectoryService>();
+builder.Services.AddScoped<IAuthorizationHandler, CheckUserIdRequirementHandle>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(options =>
@@ -105,6 +109,7 @@ builder.Services.AddAuthorization(options =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireClaim("UserID");
+        policy.AddRequirements(new CheckUserIdRequirement());
     });
 });
 

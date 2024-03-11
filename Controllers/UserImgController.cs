@@ -14,7 +14,6 @@ namespace ImageHubAPI.Controllers
     [ApiController]
     public class UserImgController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
         private readonly IUser<User> _userService;
         private readonly IUserImg<User> _userImgService;
         private readonly IFriendship<Friendship> _friendshipRepository;
@@ -25,19 +24,16 @@ namespace ImageHubAPI.Controllers
         /// </summary>
         /// <param name="userService"></param>
         /// <param name="userImgRepository">Repository for user images.</param>
-        /// <param name="configuration">Application configuration.</param>
         /// <param name="friendshipRepository">Friendship repository.</param>
         /// <param name="directory">Interface for working with the file system or directories.</param>
         public UserImgController(
           IUser<User> userService,
           IUserImg<User> userImgRepository,
-          IConfiguration configuration,
           IFriendship<Friendship> friendshipRepository,
           IDirectory directory)
         {
             _userService = userService;
             _userImgService = userImgRepository;
-            _configuration = configuration;
             _friendshipRepository = friendshipRepository;
             _directory = directory;
         }

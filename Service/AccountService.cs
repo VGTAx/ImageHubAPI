@@ -13,7 +13,7 @@ namespace ImageHubAPI.Service
             _context = context;
         }
 
-        public async Task<bool> IsEmailAvailable(string email) =>
+        public async Task<bool> IsEmailAvailableAsync(string email) =>
           await _context.Users.AnyAsync(u => u.Email == email);
     }
 }

@@ -90,7 +90,7 @@ namespace ImageHubAPI.Controllers
 
                 requester!.AddFriendship(friendship);
 
-                await _userFriendService.AddFriend(requester);
+                await _userFriendService.AddFriendAsync(requester);
 
                 return Ok("Friend added");
             }

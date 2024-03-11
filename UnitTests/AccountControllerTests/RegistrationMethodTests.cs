@@ -46,7 +46,7 @@ namespace UnitTests.AccountControllerTests
             var controller = new AccountController(stubUserManager.Object, stubSignInManager.Object, stubUserStore.Object, stubJwtGenerator.Object, stubRepository.Object);
 
             stubRepository
-              .Setup(x => x.IsEmailAvailable(It.IsAny<string>()))
+              .Setup(x => x.IsEmailAvailableAsync(It.IsAny<string>()))
               .ReturnsAsync(true);
 
             //Act
